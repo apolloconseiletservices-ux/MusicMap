@@ -3,414 +3,861 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MusicMap - Édition immersive</title>
+    <title>MusicMap - Immersive 4.0</title>
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', system-ui, sans-serif; }
-        body { background: #0b0a0f; min-height: 100vh; display: flex; justify-content: center; align-items: center; padding: 20px; color: #fff; overflow-x: hidden; }
-        .app { max-width: 950px; width: 100%; background: #14121a; border-radius: 48px; padding: 30px 28px; box-shadow: 0 20px 60px rgba(0,0,0,0.9), 0 0 0 1px #2c2638 inset; position: relative; }
-        h1 { font-size: 30px; display: flex; align-items: center; gap: 14px; margin-bottom: 4px; }
-        h1 span { background: #2a1f3a; padding: 4px 18px; border-radius: 100px; font-size: 14px; color: #b389f0; }
-        .sub { color: #a090b8; font-size: 14px; margin-bottom: 22px; border-left: 3px solid #7b4cbf; padding-left: 16px; }
-        .jauge { height: 10px; background: #2a243b; border-radius: 40px; margin: 16px 0 22px; overflow: hidden; }
-        .jauge-fill { height: 100%; width: 0%; background: linear-gradient(to right, #7b4cbf, #3ccf8e); transition: 0.5s; }
-        .steps-grid { display: flex; flex-direction: column; gap: 12px; margin-top: 10px; }
-        .step-card { background: #1e1a28; border-radius: 24px; padding: 18px 22px; display: flex; align-items: center; justify-content: space-between; border: 1px solid transparent; cursor: pointer; transition: 0.35s cubic-bezier(0.34, 1.56, 0.64, 1); opacity: 0.7; }
-        .step-card:hover { transform: scale(1.01); }
-        .step-card.active { opacity: 1; border-color: #7b4cbf; background: #231d32; box-shadow: 0 0 30px #7b4cbf33; transform: scale(1.02); }
-        .step-card.done { opacity: 0.95; border-color: #3ccf8e; background: #1a2a24; }
-        .step-card.done .step-num { background: #3ccf8e; color: #0b0a0f; }
-        .step-left { display: flex; align-items: center; gap: 18px; flex: 1; }
-        .step-num { width: 50px; height: 50px; border-radius: 40px; background: #2a243b; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 20px; color: #8c78a3; flex-shrink: 0; transition: 0.3s; }
-        .step-info h4 { font-size: 18px; font-weight: 500; }
-        .step-info p { font-size: 14px; color: #8977b0; margin: 0; }
-        .step-badge { font-size: 13px; padding: 6px 16px; border-radius: 40px; background: #2a243b; color: #b389f0; }
-        .step-badge.done { background: #3ccf8e; color: #0b0a0f; }
-        /* Zoom view */
-        .zoom-view { display: none; margin-top: 24px; background: #1a1822; border-radius: 32px; padding: 24px; border: 1px solid #2c2638; animation: fadeSlide 0.6s cubic-bezier(0.34, 1.56, 0.64, 1); }
-        .zoom-view.active { display: block; }
-        @keyframes fadeSlide { 0% { opacity: 0; transform: translateY(30px) scale(0.96); } 100% { opacity: 1; transform: translateY(0) scale(1); } }
-        .zoom-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; flex-wrap: wrap; gap: 10px; }
-        .zoom-header h3 { font-size: 22px; }
-        .zoom-header button { background: #2a243b; border: none; color: #fff; padding: 8px 22px; border-radius: 40px; cursor: pointer; font-size: 15px; transition: 0.2s; }
-        .zoom-header button:hover { background: #3a2f50; transform: scale(1.05); }
-        .task-list { display: flex; flex-direction: column; gap: 16px; }
-        /* Post-it */
-        .task-item { background: #14121a; border-radius: 20px; padding: 18px 22px; border-left: 6px solid #555; transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1); opacity: 0.7; position: relative; }
-        .task-item.active-task { opacity: 1; border-left-color: #7b4cbf; transform: scale(1.01); box-shadow: 0 0 20px #7b4cbf22; }
-        .task-item.done-task { opacity: 0.9; border-left-color: #3ccf8e; }
-        .task-item.orange-task { border-left-color: #f5a623; }
-        .task-item.red-task { border-left-color: #e74c3c; animation: pulseRed 1.5s infinite; }
-        @keyframes pulseRed { 0% { box-shadow: 0 0 0 0 #e74c3c44; } 50% { box-shadow: 0 0 20px 4px #e74c3c33; } 100% { box-shadow: 0 0 0 0 #e74c3c44; } }
-        .task-top { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px; }
-        .task-top h4 { font-size: 16px; font-weight: 500; }
-        .task-top .task-status { font-size: 12px; padding: 4px 14px; border-radius: 40px; background: #2a243b; color: #b389f0; }
-        .task-top .task-status.done { background: #3ccf8e; color: #0b0a0f; }
-        .task-instruction { font-size: 14px; color: #a090b8; margin-top: 4px; }
-        .task-timer { font-size: 14px; font-weight: 600; color: #b389f0; margin-top: 4px; }
-        .task-comment { margin-top: 8px; }
-        .task-comment input { background: #0b0a0f; border: 1px solid #2c2638; border-radius: 40px; padding: 8px 16px; color: #fff; font-size: 13px; width: 100%; max-width: 300px; transition: 0.3s; }
-        .task-comment input:focus { outline: none; border-color: #7b4cbf; }
-        .task-actions { display: flex; gap: 10px; margin-top: 12px; flex-wrap: wrap; }
-        .task-actions button { background: #2a243b; border: none; color: #fff; padding: 8px 20px; border-radius: 40px; cursor: pointer; font-size: 13px; transition: all 0.2s; }
-        .task-actions button:hover { transform: scale(1.05); background: #3a2f50; }
-        .task-actions button.validate { background: #7b4cbf; }
-        .task-actions button.validate:hover { background: #9675dc; }
-        .task-actions button.final { background: #3ccf8e; color: #0b0a0f; }
-        .task-actions button:disabled { opacity: 0.4; cursor: not-allowed; pointer-events: none; transform: none; }
-        .task-actions button.final:hover { background: #45dc9c; }
-        .task-actions button.revert { background: #e67e22; }
-        .task-actions button.revert:hover { background: #f39c12; }
-        /* Mascotte scénique */
-        .mascotte-scene { position: fixed; bottom: 20px; left: 0; width: 100%; pointer-events: none; z-index: 9999; display: flex; justify-content: flex-start; align-items: flex-end; padding: 0 20px; }
-        .mascotte { display: none; align-items: center; gap: 14px; background: #1e1a28; padding: 12px 20px 12px 16px; border-radius: 60px; border: 1px solid #7b4cbf; box-shadow: 0 10px 40px rgba(0,0,0,0.8); animation: walkIn 0.8s cubic-bezier(0.34, 1.56, 0.64, 1); pointer-events: auto; }
-        .mascotte.active { display: flex; }
-        @keyframes walkIn { 0% { transform: translateX(-120px) scale(0.5); opacity: 0; } 100% { transform: translateX(0) scale(1); opacity: 1; } }
-        .mascotte .avatar { font-size: 44px; animation: bob 1.2s infinite alternate; }
-        @keyframes bob { 0% { transform: translateY(0); } 100% { transform: translateY(-6px); } }
-        .mascotte .bubble { font-size: 14px; color: #c0b0d8; max-width: 240px; }
-        .mascotte .bubble strong { color: #fff; display: block; }
-        .mascotte .close-mascotte { background: #2a243b; border: none; color: #fff; padding: 4px 12px; border-radius: 40px; cursor: pointer; font-size: 16px; pointer-events: auto; }
-        .mascotte .close-mascotte:hover { background: #3a2f50; }
-        /* responsive */
-        @media (max-width: 600px) { .app { padding: 18px; } .step-card { flex-wrap: wrap; } .task-top { flex-direction: column; align-items: flex-start; } .task-comment input { max-width: 100%; } .mascotte { padding: 10px 16px; flex-wrap: wrap; } .mascotte .bubble { max-width: 160px; } }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', system-ui, sans-serif;
+        }
+        body {
+            background: #0b0a0f;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            color: #fff;
+        }
+        .app {
+            max-width: 950px;
+            width: 100%;
+            background: #14121a;
+            border-radius: 48px;
+            padding: 30px 28px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.9), 0 0 0 1px #2c2638 inset;
+            position: relative;
+        }
+        h1 {
+            font-size: 30px;
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            margin-bottom: 4px;
+        }
+        h1 span {
+            background: #2a1f3a;
+            padding: 4px 18px;
+            border-radius: 100px;
+            font-size: 14px;
+            color: #b389f0;
+        }
+        .sub {
+            color: #a090b8;
+            font-size: 14px;
+            margin-bottom: 22px;
+            border-left: 3px solid #7b4cbf;
+            padding-left: 16px;
+        }
+        .jauge {
+            height: 10px;
+            background: #2a243b;
+            border-radius: 40px;
+            margin: 16px 0 22px;
+            overflow: hidden;
+        }
+        .jauge-fill {
+            height: 100%;
+            width: 0%;
+            background: linear-gradient(to right, #7b4cbf, #3ccf8e);
+            transition: 0.5s;
+        }
+        /* ===== INFOS ARTISTE ===== */
+        .artist-info {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 14px;
+            margin-bottom: 24px;
+            background: #1a1822;
+            padding: 18px 22px;
+            border-radius: 28px;
+            border: 1px solid #2c2638;
+        }
+        .artist-info input {
+            background: #0b0a0f;
+            border: 1px solid #2c2638;
+            border-radius: 40px;
+            padding: 10px 18px;
+            color: #fff;
+            font-size: 14px;
+            flex: 1;
+            min-width: 140px;
+        }
+        .artist-info input:focus {
+            outline: none;
+            border-color: #7b4cbf;
+        }
+        .artist-info label {
+            color: #a090b8;
+            font-size: 13px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        /* ===== STEPS ===== */
+        .steps-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin-top: 10px;
+        }
+        .step-card {
+            background: #1e1a28;
+            border-radius: 24px;
+            padding: 18px 22px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border: 1px solid transparent;
+            cursor: pointer;
+            transition: 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+            opacity: 0.7;
+            position: relative;
+        }
+        .step-card:hover {
+            transform: scale(1.01);
+        }
+        .step-card.active {
+            opacity: 1;
+            border-color: #7b4cbf;
+            background: #231d32;
+            box-shadow: 0 0 30px #7b4cbf33;
+            transform: scale(1.02);
+        }
+        .step-card.done {
+            opacity: 0.95;
+            border-color: #3ccf8e;
+            background: #1a2a24;
+        }
+        .step-card.done .step-num {
+            background: #3ccf8e;
+            color: #0b0a0f;
+        }
+        .step-left {
+            display: flex;
+            align-items: center;
+            gap: 18px;
+            flex: 1;
+        }
+        .step-num {
+            width: 50px;
+            height: 50px;
+            border-radius: 40px;
+            background: #2a243b;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 20px;
+            color: #8c78a3;
+            flex-shrink: 0;
+            transition: 0.3s;
+        }
+        .step-info h4 {
+            font-size: 18px;
+            font-weight: 500;
+        }
+        .step-info p {
+            font-size: 14px;
+            color: #8977b0;
+            margin: 0;
+        }
+        .step-badge {
+            font-size: 13px;
+            padding: 6px 16px;
+            border-radius: 40px;
+            background: #2a243b;
+            color: #b389f0;
+        }
+        .step-badge.done {
+            background: #3ccf8e;
+            color: #0b0a0f;
+        }
+        /* ===== ZOOM ===== */
+        .zoom-view {
+            display: none;
+            margin-top: 24px;
+            background: #1a1822;
+            border-radius: 32px;
+            padding: 24px;
+            border: 1px solid #2c2638;
+            animation: fadeSlide 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+        .zoom-view.active {
+            display: block;
+        }
+        @keyframes fadeSlide {
+            0% {
+                opacity: 0;
+                transform: translateY(30px) scale(0.96);
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+        .zoom-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        .zoom-header h3 {
+            font-size: 22px;
+        }
+        .zoom-header button {
+            background: #2a243b;
+            border: none;
+            color: #fff;
+            padding: 8px 22px;
+            border-radius: 40px;
+            cursor: pointer;
+            font-size: 15px;
+            transition: 0.2s;
+        }
+        .zoom-header button:hover {
+            background: #3a2f50;
+            transform: scale(1.05);
+        }
+        /* ===== POST-IT ===== */
+        .task-list {
+            display: flex;
+            flex-direction: column;
+            gap: 18px;
+        }
+        .task-item {
+            background: #f9f3e8;
+            color: #1a1a1a;
+            border-radius: 16px;
+            padding: 18px 22px;
+            box-shadow: 0 8px 0 #c9b99a, 0 12px 30px rgba(0, 0, 0, 0.5);
+            transform: rotate(0deg);
+            transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+            opacity: 0.7;
+            border-left: 8px solid #c9b99a;
+            position: relative;
+        }
+        .task-item::after {
+            content: '';
+            position: absolute;
+            top: -6px;
+            right: 16px;
+            width: 30px;
+            height: 30px;
+            background: #f9f3e8;
+            border-radius: 0 0 12px 0;
+            box-shadow: 4px -4px 0 #c9b99a;
+            transform: rotate(2deg);
+        }
+        .task-item.active-task {
+            opacity: 1;
+            border-left-color: #7b4cbf;
+            transform: rotate(-0.5deg) scale(1.02);
+            box-shadow: 0 8px 0 #7b4cbf, 0 12px 30px rgba(123, 76, 191, 0.3);
+        }
+        .task-item.done-task {
+            opacity: 0.9;
+            border-left-color: #3ccf8e;
+            transform: rotate(0.5deg);
+            box-shadow: 0 8px 0 #3ccf8e, 0 12px 30px rgba(60, 207, 142, 0.3);
+        }
+        .task-item.orange-task {
+            border-left-color: #f5a623;
+            box-shadow: 0 8px 0 #f5a623, 0 12px 30px rgba(245, 166, 35, 0.3);
+        }
+        .task-item.red-task {
+            border-left-color: #e74c3c;
+            box-shadow: 0 8px 0 #e74c3c, 0 12px 30px rgba(231, 76, 60, 0.3);
+            animation: pulseRed 1.5s infinite;
+        }
+        @keyframes pulseRed {
+            0% { transform: rotate(-0.5deg) scale(1); }
+            50% { transform: rotate(-0.5deg) scale(1.02); }
+            100% { transform: rotate(-0.5deg) scale(1); }
+        }
+        .task-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+        .task-top h4 {
+            font-size: 16px;
+            font-weight: 600;
+            color: #1a1a1a;
+        }
+        .task-top .task-status {
+            font-size: 12px;
+            padding: 4px 14px;
+            border-radius: 40px;
+            background: #2a243b;
+            color: #b389f0;
+        }
+        .task-top .task-status.done {
+            background: #3ccf8e;
+            color: #0b0a0f;
+        }
+        .task-instruction {
+            font-size: 14px;
+            color: #3d3d3d;
+            margin-top: 4px;
+        }
+        .task-timer {
+            font-size: 14px;
+            font-weight: 600;
+            color: #7b4cbf;
+            margin-top: 4px;
+        }
+        .task-comment {
+            margin-top: 8px;
+        }
+        .task-comment input {
+            background: #fff;
+            border: 1px solid #c9b99a;
+            border-radius: 40px;
+            padding: 8px 16px;
+            color: #1a1a1a;
+            font-size: 13px;
+            width: 100%;
+            max-width: 300px;
+            transition: 0.3s;
+        }
+        .task-comment input:focus {
+            outline: none;
+            border-color: #7b4cbf;
+        }
+        .task-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 12px;
+            flex-wrap: wrap;
+        }
+        .task-actions button {
+            background: #2a243b;
+            border: none;
+            color: #fff;
+            padding: 8px 20px;
+            border-radius: 40px;
+            cursor: pointer;
+            font-size: 13px;
+            transition: all 0.2s;
+        }
+        .task-actions button:hover {
+            transform: scale(1.05);
+            background: #3a2f50;
+        }
+        .task-actions button.validate {
+            background: #7b4cbf;
+        }
+        .task-actions button.validate:hover {
+            background: #9675dc;
+        }
+        .task-actions button.final {
+            background: #3ccf8e;
+            color: #0b0a0f;
+        }
+        .task-actions button:disabled {
+            opacity: 0.4;
+            cursor: not-allowed;
+            pointer-events: none;
+            transform: none;
+        }
+        .task-actions button.final:hover {
+            background: #45dc9c;
+        }
+        .task-actions button.revert {
+            background: #e67e22;
+        }
+        .task-actions button.revert:hover {
+            background: #f39c12;
+        }
+        /* ===== MASCOOTTE ===== */
+        .mascotte-scene {
+            position: fixed;
+            bottom: 20px;
+            left: 0;
+            width: 100%;
+            pointer-events: none;
+            z-index: 9999;
+            display: flex;
+            justify-content: flex-start;
+            align-items: flex-end;
+            padding: 0 20px;
+        }
+        .mascotte {
+            display: none;
+            align-items: center;
+            gap: 14px;
+            background: #1e1a28;
+            padding: 12px 20px 12px 16px;
+            border-radius: 60px;
+            border: 1px solid #7b4cbf;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.8);
+            animation: walkIn 0.8s cubic-bezier(0.34, 1.56, 0.64, 1);
+            pointer-events: auto;
+        }
+        .mascotte.active {
+            display: flex;
+        }
+        @keyframes walkIn {
+            0% { transform: translateX(-120px) scale(0.5); opacity: 0; }
+            100% { transform: translateX(0) scale(1); opacity: 1; }
+        }
+        .mascotte .avatar {
+            font-size: 44px;
+            animation: bob 1.2s infinite alternate;
+        }
+        @keyframes bob {
+            0% { transform: translateY(0); }
+            100% { transform: translateY(-6px); }
+        }
+        .mascotte .bubble {
+            font-size: 14px;
+            color: #c0b0d8;
+            max-width: 240px;
+        }
+        .mascotte .bubble strong {
+            color: #fff;
+            display: block;
+        }
+        .mascotte .close-mascotte {
+            background: #2a243b;
+            border: none;
+            color: #fff;
+            padding: 4px 12px;
+            border-radius: 40px;
+            cursor: pointer;
+            font-size: 16px;
+            pointer-events: auto;
+        }
+        .mascotte .close-mascotte:hover {
+            background: #3a2f50;
+        }
+        @media (max-width: 600px) {
+            .app {
+                padding: 18px;
+            }
+            .step-card {
+                flex-wrap: wrap;
+            }
+            .task-top {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            .task-comment input {
+                max-width: 100%;
+            }
+            .mascotte {
+                padding: 10px 16px;
+                flex-wrap: wrap;
+            }
+            .mascotte .bubble {
+                max-width: 160px;
+            }
+        }
     </style>
 </head>
 <body>
 
-<div class="app">
-    <h1>🎵 MusicMap <span>V3.0</span></h1>
-    <div class="sub">Chef de projet musical — 6 étapes immersives</div>
-    <div class="jauge"><div class="jauge-fill" id="globalProgress"></div></div>
+    <div class="app">
+        <h1>🎵 MusicMap <span>V4.0</span></h1>
+        <div class="sub">Chef de projet musical — 6 étapes immersives</div>
 
-    <div id="macroView">
-        <div class="steps-grid" id="stepsContainer"></div>
-    </div>
-
-    <div class="zoom-view" id="zoomView">
-        <div class="zoom-header">
-            <h3 id="zoomTitle">Étape 1</h3>
-            <button onclick="closeZoom()">✕ Retour</button>
+        <!-- Infos artiste -->
+        <div class="artist-info">
+            <label>🎤 Artiste <input type="text" id="artistName" placeholder="Nom de l'artiste" value=""></label>
+            <label>🎸 Genre <input type="text" id="artistGenre" placeholder="Genre musical" value=""></label>
+            <label>🔗 Lien <input type="text" id="artistLink" placeholder="Lien (Spotify, Insta...)" value=""></label>
         </div>
-        <div class="task-list" id="taskContainer"></div>
+
+        <div class="jauge"><div class="jauge-fill" id="globalProgress"></div></div>
+
+        <div id="macroView">
+            <div class="steps-grid" id="stepsContainer"></div>
+        </div>
+
+        <div class="zoom-view" id="zoomView">
+            <div class="zoom-header">
+                <h3 id="zoomTitle">Étape 1</h3>
+                <button onclick="closeZoom()">✕ Retour</button>
+            </div>
+            <div class="task-list" id="taskContainer"></div>
+        </div>
     </div>
-</div>
 
-<!-- Mascotte scénique -->
-<div class="mascotte-scene">
-    <div class="mascotte" id="mascotte">
-        <span class="avatar">🧑‍🚀</span>
-        <div class="bubble" id="mascotteMsg"><strong>Chef de projet</strong> Alors, on avance ?</div>
-        <button class="close-mascotte" onclick="closeMascotte()">✕</button>
+    <!-- Mascotte -->
+    <div class="mascotte-scene">
+        <div class="mascotte" id="mascotte">
+            <span class="avatar">🧑‍🚀</span>
+            <div class="bubble" id="mascotteMsg"><strong>Chef de projet</strong> Alors, on avance ?</div>
+            <button class="close-mascotte" onclick="closeMascotte()">✕</button>
+        </div>
     </div>
-</div>
 
-<script>
-    // ===== DONNÉES =====
-    const projectData = [
-        { id: 1, title: "📱 Comprendre & s'engager", desc: "Fiche artiste, accord, accès", tasks: [
-            { id: "1.1", instruction: "Remplis ta fiche artiste (nom, genre, liens)", duration: 2 },
-            { id: "1.2", instruction: "Signe l'accord de planning (valide les délais)", duration: 1 },
-            { id: "1.3", instruction: "Donne les accès à tes comptes (Spotify, Insta...)", duration: 1 }
-        ]},
-        { id: 2, title: "🎬 Préparer la musique", desc: "Fichier final, infos, validation", tasks: [
-            { id: "2.1", instruction: "Envoie le fichier audio final (WAV/MP3)", duration: 3 },
-            { id: "2.2", instruction: "Remplis les infos du titre (titre, featuring, durée)", duration: 1 },
-            { id: "2.3", instruction: "Valide le son définitif (mix/master)", duration: 2 }
-        ]},
-        { id: 3, title: "🎨 Créer l'habillage", desc: "Pochette, visuels, teaser", tasks: [
-            { id: "3.1", instruction: "Valide la pochette (carrée, format plateformes)", duration: 3 },
-            { id: "3.2", instruction: "Fournis une photo ou vidéo teaser", duration: 2 },
-            { id: "3.3", instruction: "Valide l'image finale", duration: 2 }
-        ]},
-        { id: 4, title: "📢 Lancer la promo", desc: "Comptes, vidéos, dossier presse", tasks: [
-            { id: "4.1", instruction: "Vérifie tes comptes TikTok/Insta/Spotify", duration: 2 },
-            { id: "4.2", instruction: "Prépare 3 vidéos pour annoncer", duration: 4 },
-            { id: "4.3", instruction: "Envoie le dossier à des contacts (presse, blog)", duration: 3 }
-        ]},
-        { id: 5, title: "🚀 Sortir le titre", desc: "Vérification, publications, emailing", tasks: [
-            { id: "5.1", instruction: "Vérifie que la musique est bien en ligne partout", duration: 1 },
-            { id: "5.2", instruction: "Publie les annonces sur les réseaux", duration: 1 },
-            { id: "5.3", instruction: "Envoie un email à tes fans", duration: 1 }
-        ]},
-        { id: 6, title: "📊 Faire le bilan", desc: "Chiffres, retours, clôture", tasks: [
-            { id: "6.1", instruction: "Regarde les chiffres (streams, vues)", duration: 2 },
-            { id: "6.2", instruction: "Recueille les retours", duration: 2 },
-            { id: "6.3", instruction: "Valide la clôture du projet", duration: 1 }
-        ]}
-    ];
+    <script>
+        // ===== DONNÉES =====
+        const projectData = [{
+            id: 1,
+            title: "📱 Comprendre & s'engager",
+            desc: "Fiche artiste, accord, accès",
+            tasks: [
+                { id: "1.1", instruction: "Remplis ta fiche artiste (nom, genre, liens)", duration: 2 },
+                { id: "1.2", instruction: "Signe l'accord de planning (valide les délais)", duration: 1 },
+                { id: "1.3", instruction: "Donne les accès à tes comptes (Spotify, Insta...)", duration: 1 }
+            ]
+        }, {
+            id: 2,
+            title: "🎬 Préparer la musique",
+            desc: "Fichier final, infos, validation",
+            tasks: [
+                { id: "2.1", instruction: "Envoie le fichier audio final (WAV/MP3)", duration: 3 },
+                { id: "2.2", instruction: "Remplis les infos du titre (titre, featuring, durée)", duration: 1 },
+                { id: "2.3", instruction: "Valide le son définitif (mix/master)", duration: 2 }
+            ]
+        }, {
+            id: 3,
+            title: "🎨 Créer l'habillage",
+            desc: "Pochette, visuels, teaser",
+            tasks: [
+                { id: "3.1", instruction: "Valide la pochette (carrée, format plateformes)", duration: 3 },
+                { id: "3.2", instruction: "Fournis une photo ou vidéo teaser", duration: 2 },
+                { id: "3.3", instruction: "Valide l'image finale", duration: 2 }
+            ]
+        }, {
+            id: 4,
+            title: "📢 Lancer la promo",
+            desc: "Comptes, vidéos, dossier presse",
+            tasks: [
+                { id: "4.1", instruction: "Vérifie tes comptes TikTok/Insta/Spotify", duration: 2 },
+                { id: "4.2", instruction: "Prépare 3 vidéos pour annoncer", duration: 4 },
+                { id: "4.3", instruction: "Envoie le dossier à des contacts (presse, blog)", duration: 3 }
+            ]
+        }, {
+            id: 5,
+            title: "🚀 Sortir le titre",
+            desc: "Vérification, publications, emailing",
+            tasks: [
+                { id: "5.1", instruction: "Vérifie que la musique est bien en ligne partout", duration: 1 },
+                { id: "5.2", instruction: "Publie les annonces sur les réseaux", duration: 1 },
+                { id: "5.3", instruction: "Envoie un email à tes fans", duration: 1 }
+            ]
+        }, {
+            id: 6,
+            title: "📊 Faire le bilan",
+            desc: "Chiffres, retours, clôture",
+            tasks: [
+                { id: "6.1", instruction: "Regarde les chiffres (streams, vues)", duration: 2 },
+                { id: "6.2", instruction: "Recueille les retours", duration: 2 },
+                { id: "6.3", instruction: "Valide la clôture du projet", duration: 1 }
+            ]
+        }];
 
-    // ===== ÉTAT =====
-    let state = {};
-    let currentStepId = null;
-    let mascotteTimer = null;
-    let timerInterval = null;
+        // ===== ÉTAT =====
+        let state = {};
+        let currentStepId = null;
+        let mascotteTimer = null;
+        let timerInterval = null;
 
-    function initState() {
-        projectData.forEach(step => {
-            state[step.id] = {};
-            step.tasks.forEach(task => {
-                state[step.id][task.id] = {
-                    status: 'todo',
-                    comment: '',
-                    startTime: null
-                };
-            });
-        });
-    }
-
-    function loadState() {
-        try {
-            const saved = sessionStorage.getItem('musicMapState');
-            if (saved) {
-                state = JSON.parse(saved);
-                projectData.forEach(step => {
-                    if (!state[step.id]) state[step.id] = {};
-                    step.tasks.forEach(task => {
-                        if (!state[step.id][task.id]) {
-                            state[step.id][task.id] = { status: 'todo', comment: '', startTime: null };
-                        }
-                    });
+        function initState() {
+            projectData.forEach(step => {
+                state[step.id] = {};
+                step.tasks.forEach(task => {
+                    state[step.id][task.id] = {
+                        status: 'todo',
+                        comment: '',
+                        startTime: null
+                    };
                 });
-            } else {
+            });
+        }
+
+        function loadState() {
+            try {
+                const saved = sessionStorage.getItem('musicMapState');
+                if (saved) {
+                    state = JSON.parse(saved);
+                    projectData.forEach(step => {
+                        if (!state[step.id]) state[step.id] = {};
+                        step.tasks.forEach(task => {
+                            if (!state[step.id][task.id]) {
+                                state[step.id][task.id] = { status: 'todo', comment: '', startTime: null };
+                            }
+                        });
+                    });
+                } else {
+                    initState();
+                }
+            } catch (e) {
                 initState();
             }
-        } catch(e) {
-            initState();
         }
-    }
 
-    function saveState() {
-        try {
-            sessionStorage.setItem('musicMapState', JSON.stringify(state));
-        } catch(e) {}
-    }
+        function saveState() {
+            try {
+                sessionStorage.setItem('musicMapState', JSON.stringify(state));
+            } catch (e) {}
+        }
 
-    // ===== MASCOOTTE =====
-    function showMascotte(title, msg, duration = 6000) {
-        const el = document.getElementById('mascotte');
-        document.getElementById('mascotteMsg').innerHTML = `<strong>${title}</strong> ${msg}`;
-        el.classList.add('active');
-        if (mascotteTimer) clearTimeout(mascotteTimer);
-        mascotteTimer = setTimeout(() => {
-            el.classList.remove('active');
-        }, duration);
-    }
+        // ===== SAUVEGARDE INFOS ARTISTE =====
+        function saveArtistInfo() {
+            const name = document.getElementById('artistName').value;
+            const genre = document.getElementById('artistGenre').value;
+            const link = document.getElementById('artistLink').value;
+            try {
+                sessionStorage.setItem('artistInfo', JSON.stringify({ name, genre, link }));
+            } catch (e) {}
+        }
 
-    function closeMascotte() {
-        document.getElementById('mascotte').classList.remove('active');
-        if (mascotteTimer) clearTimeout(mascotteTimer);
-    }
+        function loadArtistInfo() {
+            try {
+                const saved = sessionStorage.getItem('artistInfo');
+                if (saved) {
+                    const info = JSON.parse(saved);
+                    document.getElementById('artistName').value = info.name || '';
+                    document.getElementById('artistGenre').value = info.genre || '';
+                    document.getElementById('artistLink').value = info.link || '';
+                }
+            } catch (e) {}
+        }
 
-    // ===== RENDU MACRO =====
-    function renderMacro() {
-        const container = document.getElementById('stepsContainer');
-        container.innerHTML = '';
-        let totalTasks = 0, doneTasks = 0;
+        // ===== MASCOOTTE =====
+        function showMascotte(title, msg, duration = 6000) {
+            const el = document.getElementById('mascotte');
+            document.getElementById('mascotteMsg').innerHTML = `<strong>${title}</strong> ${msg}`;
+            el.classList.add('active');
+            if (mascotteTimer) clearTimeout(mascotteTimer);
+            mascotteTimer = setTimeout(() => {
+                el.classList.remove('active');
+            }, duration);
+        }
 
-        projectData.forEach(step => {
-            const stepTasks = step.tasks;
-            totalTasks += stepTasks.length;
-            let stepDone = 0;
-            stepTasks.forEach(task => {
-                const s = state[step.id]?.[task.id]?.status;
-                if (s === 'done' || s === 'final') stepDone++;
-            });
-            doneTasks += stepDone;
-            const allDone = stepDone === stepTasks.length;
-            const isActive = currentStepId === step.id;
+        function closeMascotte() {
+            document.getElementById('mascotte').classList.remove('active');
+            if (mascotteTimer) clearTimeout(mascotteTimer);
+        }
 
-            const card = document.createElement('div');
-            card.className = 'step-card' + (allDone ? ' done' : '') + (isActive ? ' active' : '');
-            card.innerHTML = `
-                <div class="step-left">
-                    <div class="step-num">${step.id}</div>
-                    <div class="step-info">
-                        <h4>${step.title}</h4>
-                        <p>${step.desc}</p>
+        // ===== RENDU MACRO =====
+        function renderMacro() {
+            const container = document.getElementById('stepsContainer');
+            container.innerHTML = '';
+            let totalTasks = 0,
+                doneTasks = 0;
+
+            projectData.forEach(step => {
+                const stepTasks = step.tasks;
+                totalTasks += stepTasks.length;
+                let stepDone = 0;
+                stepTasks.forEach(task => {
+                    const s = state[step.id]?.[task.id]?.status;
+                    if (s === 'done' || s === 'final') stepDone++;
+                });
+                doneTasks += stepDone;
+                const allDone = stepDone === stepTasks.length;
+                const isActive = currentStepId === step.id;
+
+                const card = document.createElement('div');
+                card.className = 'step-card' + (allDone ? ' done' : '') + (isActive ? ' active' : '');
+                card.innerHTML = `
+                    <div class="step-left">
+                        <div class="step-num">${step.id}</div>
+                        <div class="step-info">
+                            <h4>${step.title}</h4>
+                            <p>${step.desc}</p>
+                        </div>
                     </div>
-                </div>
-                <div class="step-badge ${allDone ? 'done' : ''}">${allDone ? '✅ Terminé' : stepDone+'/'+stepTasks.length}</div>
-            `;
-            card.onclick = () => openZoom(step.id);
-            container.appendChild(card);
-        });
+                    <div class="step-badge ${allDone ? 'done' : ''}">${allDone ? '✅ Terminé' : stepDone+'/'+stepTasks.length}</div>
+                `;
+                card.onclick = () => openZoom(step.id);
+                container.appendChild(card);
+            });
 
-        const pct = totalTasks > 0 ? Math.round((doneTasks / totalTasks) * 100) : 0;
-        document.getElementById('globalProgress').style.width = pct + '%';
-        if (pct === 100) showMascotte('🎉 Félicitations !', 'Tout le projet est terminé. Bravo !', 10000);
-    }
-
-    // ===== ZOOM =====
-    function openZoom(stepId) {
-        if (timerInterval) clearInterval(timerInterval);
-        currentStepId = stepId;
-        const step = projectData.find(s => s.id === stepId);
-        if (!step) return;
-        document.getElementById('zoomTitle').textContent = step.title;
-        document.getElementById('macroView').style.display = 'none';
-        document.getElementById('zoomView').classList.add('active');
-        renderTasks(step);
-        timerInterval = setInterval(() => {
-            if (currentStepId) {
-                const s = projectData.find(p => p.id === currentStepId);
-                if (s) renderTasks(s);
-            }
-        }, 8000);
-        showMascotte('🔍 Zoom', 'Voici les tâches de cette étape', 3000);
-    }
-
-    function closeZoom() {
-        if (timerInterval) clearInterval(timerInterval);
-        timerInterval = null;
-        currentStepId = null;
-        document.getElementById('macroView').style.display = 'block';
-        document.getElementById('zoomView').classList.remove('active');
-        renderMacro();
-    }
-
-    // ===== RENDU TÂCHES =====
-    function renderTasks(step) {
-        const container = document.getElementById('taskContainer');
-        container.innerHTML = '';
-        let previousDone = true;
-
-        step.tasks.forEach((task, idx) => {
-            const taskState = state[step.id]?.[task.id] || { status: 'todo', comment: '', startTime: null };
-            const isActive = previousDone && (taskState.status === 'todo' || taskState.status === 'doing');
-            const isDone = taskState.status === 'done' || taskState.status === 'final';
-            const isFinal = taskState.status === 'final';
-
-            let elapsedDays = 0;
-            let timeDisplay = '';
-            if (taskState.startTime) {
-                const elapsedMs = Date.now() - taskState.startTime;
-                elapsedDays = elapsedMs / (1000 * 60 * 60 * 24);
-                const remaining = Math.max(0, task.duration * 24 * 60 * 60 * 1000 - elapsedMs);
-                const days = Math.floor(remaining / (1000 * 60 * 60 * 24));
-                const hours = Math.floor((remaining % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-                const minutes = Math.floor((remaining % (1000 * 60 * 60)) / (1000 * 60));
-                timeDisplay = `⏱️ Temps restant : ${days}j ${hours}h ${minutes}m`;
-            } else if (isDone && !isFinal) {
-                timeDisplay = '✅ Tâche terminée (modifiable)';
-            } else if (isFinal) {
-                timeDisplay = '🔒 Tâche définitivement validée';
-            } else {
-                timeDisplay = `⏱️ Durée estimée : ${task.duration} jour${task.duration>1?'s':''}`;
-            }
-
-            const isLate = elapsedDays > task.duration && !isDone && !isFinal;
-            const isAlmostLate = elapsedDays >= task.duration * 0.8 && !isLate && !isDone && !isFinal;
-
-            const div = document.createElement('div');
-            div.className = 'task-item';
-            if (isDone) div.classList.add('done-task');
-            else if (isActive) div.classList.add('active-task');
-            if (isLate && !isDone) div.classList.add('red-task');
-            else if (isAlmostLate && !isDone) div.classList.add('orange-task');
-
-            const statusLabel = isFinal ? '✅ Définitif' : isDone ? '✔️ Terminé' : isActive ? '⏳ En cours' : '⏹️ Bloqué';
-
-            div.innerHTML = `
-                <div class="task-top">
-                    <h4>📌 Tâche ${task.id}</h4>
-                    <span class="task-status ${isDone ? 'done' : ''}">${statusLabel}</span>
-                </div>
-                <div class="task-instruction">${task.instruction}</div>
-                <div class="task-timer">${timeDisplay}</div>
-                <div class="task-comment">
-                    <input type="text" placeholder="Écrire un commentaire..." value="${taskState.comment || ''}" 
-                           onchange="updateComment(${step.id}, '${task.id}', this.value)">
-                </div>
-                <div class="task-actions">
-                    ${!isFinal ? `
-                        <button ${isActive ? '' : 'disabled'} class="validate" onclick="doTask(${step.id}, '${task.id}', 'done')">✔️ Terminer</button>
-                        <button ${isActive ? '' : 'disabled'} class="final" onclick="doTask(${step.id}, '${task.id}', 'final')">🔒 Définitif</button>
-                    ` : `
-                        <span style="color:#3ccf8e;">✅ Tâche verrouillée</span>
-                        <button class="revert" onclick="requestRevert(${step.id}, '${task.id}')">↩️ Demander retour</button>
-                    `}
-                </div>
-                ${isLate ? `<div style="color:#e74c3c;font-size:13px;margin-top:6px;">⚠️ Retard ! Dépassement de ${(elapsedDays - task.duration).toFixed(1)} jour(s).</div>` : ''}
-                ${isAlmostLate && !isLate ? `<div style="color:#f5a623;font-size:13px;margin-top:6px;">⏳ Attention, bientôt en retard.</div>` : ''}
-            `;
-            container.appendChild(div);
-            if (!isDone) previousDone = false;
-        });
-    }
-
-    // ===== ACTIONS =====
-    function doTask(stepId, taskId, status) {
-        const step = projectData.find(s => s.id === stepId);
-        if (!step) return;
-        const task = step.tasks.find(t => t.id === taskId);
-        if (!task) return;
-        const taskState = state[stepId]?.[taskId];
-        if (!taskState) return;
-
-        const idx = step.tasks.indexOf(task);
-        if (idx > 0) {
-            const prevTask = step.tasks[idx - 1];
-            const prevState = state[stepId]?.[prevTask.id];
-            if (prevState && prevState.status !== 'final' && prevState.status !== 'done') {
-                showMascotte('⛔ Bloqué', 'Termine d\'abord la tâche précédente.');
-                return;
-            }
+            const pct = totalTasks > 0 ? Math.round((doneTasks / totalTasks) * 100) : 0;
+            document.getElementById('globalProgress').style.width = pct + '%';
+            if (pct === 100) showMascotte('🎉 Félicitations !', 'Tout le projet est terminé. Bravo !', 10000);
         }
 
-        if (taskState.status === 'todo' && status !== 'final') {
-            taskState.startTime = Date.now();
+        // ===== ZOOM =====
+        function openZoom(stepId) {
+            if (timerInterval) clearInterval(timerInterval);
+            currentStepId = stepId;
+            const step = projectData.find(s => s.id === stepId);
+            if (!step) return;
+            document.getElementById('zoomTitle').textContent = step.title;
+            document.getElementById('macroView').style.display = 'none';
+            document.getElementById('zoomView').classList.add('active');
+            renderTasks(step);
+            timerInterval = setInterval(() => {
+                if (currentStepId) {
+                    const s = projectData.find(p => p.id === currentStepId);
+                    if (s) renderTasks(s);
+                }
+            }, 8000);
+            showMascotte('🔍 Zoom', 'Voici les tâches de cette étape', 3000);
         }
-        taskState.status = status;
 
-        if (status === 'done') showMascotte('✅ Bien joué !', 'Tâche terminée. Passe à la suivante.', 4000);
-        else if (status === 'final') showMascotte('🔒 Verrouillé', 'Tâche définitivement validée.', 4000);
+        function closeZoom() {
+            if (timerInterval) clearInterval(timerInterval);
+            timerInterval = null;
+            currentStepId = null;
+            document.getElementById('macroView').style.display = 'block';
+            document.getElementById('zoomView').classList.remove('active');
+            renderMacro();
+        }
 
-        const allFinal = step.tasks.every(t => {
-            const s = state[stepId]?.[t.id];
-            return s && (s.status === 'final' || s.status === 'done');
-        });
-        if (allFinal) showMascotte('🎉 Étape complète', 'Toutes les tâches sont validées !', 6000);
+        // ===== RENDU TÂCHES (POST-IT) =====
+        function renderTasks(step) {
+            const container = document.getElementById('taskContainer');
+            container.innerHTML = '';
+            let previousDone = true;
 
-        saveState();
-        if (currentStepId === stepId) renderTasks(step);
-        renderMacro();
-    }
+            step.tasks.forEach((task, idx) => {
+                const taskState = state[step.id]?.[task.id] || { status: 'todo', comment: '', startTime: null };
+                const isActive = previousDone && (taskState.status === 'todo' || taskState.status === 'doing');
+                const isDone = taskState.status === 'done' || taskState.status === 'final';
+                const isFinal = taskState.status === 'final';
 
-    function updateComment(stepId, taskId, value) {
-        const taskState = state[stepId]?.[taskId];
-        if (taskState) {
-            taskState.comment = value;
+                let elapsedDays = 0;
+                let timeDisplay = '';
+                if (taskState.startTime) {
+                    const elapsedMs = Date.now() - taskState.startTime;
+                    elapsedDays = elapsedMs / (1000 * 60 * 60 * 24);
+                    const remaining = Math.max(0, task.duration * 24 * 60 * 60 * 1000 - elapsedMs);
+                    const days = Math.floor(remaining / (1000 * 60 * 60 * 24));
+                    const hours = Math.floor((remaining % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                    const minutes = Math.floor((remaining % (1000 * 60 * 60)) / (1000 * 60));
+                    timeDisplay = `⏱️ Temps restant : ${days}j ${hours}h ${minutes}m`;
+                } else if (isDone && !isFinal) {
+                    timeDisplay = '✅ Tâche terminée (modifiable)';
+                } else if (isFinal) {
+                    timeDisplay = '🔒 Tâche définitivement validée';
+                } else {
+                    timeDisplay = `⏱️ Durée estimée : ${task.duration} jour${task.duration>1?'s':''}`;
+                }
+
+                const isLate = elapsedDays > task.duration && !isDone && !isFinal;
+                const isAlmostLate = elapsedDays >= task.duration * 0.8 && !isLate && !isDone && !isFinal;
+
+                const div = document.createElement('div');
+                div.className = 'task-item';
+                if (isDone) div.classList.add('done-task');
+                else if (isActive) div.classList.add('active-task');
+                if (isLate && !isDone) div.classList.add('red-task');
+                else if (isAlmostLate && !isDone) div.classList.add('orange-task');
+
+                const statusLabel = isFinal ? '✅ Définitif' : isDone ? '✔️ Terminé' : isActive ? '⏳ En cours' : '⏹️ Bloqué';
+
+                div.innerHTML = `
+                    <div class="task-top">
+                        <h4>📌 Tâche ${task.id}</h4>
+                        <span class="task-status ${isDone ? 'done' : ''}">${statusLabel}</span>
+                    </div>
+                    <div class="task-instruction">${task.instruction}</div>
+                    <div class="task-timer">${timeDisplay}</div>
+                    <div class="task-comment">
+                        <input type="text" placeholder="Écrire un commentaire..." value="${taskState.comment || ''}" 
+                               onchange="updateComment(${step.id}, '${task.id}', this.value)">
+                    </div>
+                    <div class="task-actions">
+                        ${!isFinal ? `
+                            <button ${isActive ? '' : 'disabled'} class="validate" onclick="doTask(${step.id}, '${task.id}', 'done')">✔️ Terminer</button>
+                            <button ${isActive ? '' : 'disabled'} class="final" onclick="doTask(${step.id}, '${task.id}', 'final')">🔒 Définitif</button>
+                        ` : `
+                            <span style="color:#3ccf8e;">✅ Tâche verrouillée</span>
+                            <button class="revert" onclick="requestRevert(${step.id}, '${task.id}')">↩️ Demander retour</button>
+                        `}
+                    </div>
+                    ${isLate ? `<div style="color:#e74c3c;font-size:13px;margin-top:6px;">⚠️ Retard ! Dépassement de ${(elapsedDays - task.duration).toFixed(1)} jour(s).</div>` : ''}
+                    ${isAlmostLate && !isLate ? `<div style="color:#f5a623;font-size:13px;margin-top:6px;">⏳ Attention, bientôt en retard.</div>` : ''}
+                `;
+                container.appendChild(div);
+                if (!isDone) previousDone = false;
+            });
+        }
+
+        // ===== ACTIONS =====
+        function doTask(stepId, taskId, status) {
+            const step = projectData.find(s => s.id === stepId);
+            if (!step) return;
+            const task = step.tasks.find(t => t.id === taskId);
+            if (!task) return;
+            const taskState = state[stepId]?.[taskId];
+            if (!taskState) return;
+
+            const idx = step.tasks.indexOf(task);
+            if (idx > 0) {
+                const prevTask = step.tasks[idx - 1];
+                const prevState = state[stepId]?.[prevTask.id];
+                if (prevState && prevState.status !== 'final' && prevState.status !== 'done') {
+                    showMascotte('⛔ Bloqué', 'Termine d\'abord la tâche précédente.');
+                    return;
+                }
+            }
+
+            if (taskState.status === 'todo' && status !== 'final') {
+                taskState.startTime = Date.now();
+            }
+            taskState.status = status;
+
+            if (status === 'done') showMascotte('✅ Bien joué !', 'Tâche terminée. Passe à la suivante.', 4000);
+            else if (status === 'final') showMascotte('🔒 Verrouillé', 'Tâche définitivement validée.', 4000);
+
+            const allFinal = step.tasks.every(t => {
+                const s = state[stepId]?.[t.id];
+                return s && (s.status === 'final' || s.status === 'done');
+            });
+            if (allFinal) showMascotte('🎉 Étape complète', 'Toutes les tâches sont validées !', 6000);
+
             saveState();
+            if (currentStepId === stepId) renderTasks(step);
+            renderMacro();
         }
-    }
 
-    function requestRevert(stepId, taskId) {
-        if (confirm('Demander à l\'administrateur de déverrouiller cette tâche ?')) {
-            const email = 'admin@musicmap.com';
-            const subject = encodeURIComponent('Demande retour - Tâche ' + taskId);
-            const body = encodeURIComponent('Bonjour,\n\nJe souhaite revenir sur la tâche ' + taskId + '.\n\nMerci de la déverrouiller.\n\nClient MusicMap.');
-            window.location.href = 'mailto:' + email + '?subject=' + subject + '&body=' + body;
-            showMascotte('📩 Demande envoyée', 'Email ouvert pour l\'admin.', 5000);
+        function updateComment(stepId, taskId, value) {
+            const taskState = state[stepId]?.[taskId];
+            if (taskState) {
+                taskState.comment = value;
+                saveState();
+            }
         }
-    }
 
-    // ===== INIT =====
-    loadState();
-    renderMacro();
-    document.getElementById('macroView').style.display = 'block';
-    console.log('🎵 MusicMap V3.0 immersive chargée');
-
-    // Petit rappel périodique (toutes les 30s)
-    setInterval(() => {
-        const totalTasks = projectData.reduce((acc, s) => acc + s.tasks.length, 0);
-        const doneTasks = projectData.reduce((acc, s) => acc + s.tasks.filter(t => {
-            const st = state[s.id]?.[t.id];
-            return st && (st.status === 'done' || st.status === 'final');
-        }).length, 0);
-        if (doneTasks > 0 && doneTasks < totalTasks) {
-            showMascotte('⏰ Petit rappel', 'N\'oublie pas de valider tes tâches !', 4000);
+        function requestRevert(stepId, taskId) {
+            if (confirm('Demander à l\'administrateur de déverrouiller cette tâche ?')) {
+                const email = 'admin@musicmap.com';
+                const subject = encodeURIComponent('Demande retour - Tâche ' + taskId);
+                const body = encodeURIComponent('Bonjour,\n\nJe souhaite revenir sur la tâche ' + taskId +
+                    '.\n\nMerci de la déverrouiller.\n\nClient MusicMap.');
+                window.location.href = 'mailto:' + email + '?subject=' + subject + '&body=' + body;
+                showMascotte('📩 Demande envoyée', 'Email ouvert pour l\'admin.', 5000);
+            }
         }
-    }, 30000);
-</script>
+
+        // ===== INIT =====
+        loadState();
+        loadArtistInfo();
+        renderMacro();
+        document.getElementById('macroView').style.display = 'block';
+        console.log('🎵 MusicMap V4.0 immersive chargée');
+
+        // Sauvegarde automatique des infos artiste
+        document.getElementById('artistName').addEventListener('change', saveArtistInfo);
+        document.getElementById('artistGenre').addEventListener('change', saveArtistInfo);
+        document.getElementById('artistLink').addEventListener('change', saveArtistInfo);
+
+        // Rappel périodique
+        setInterval(() => {
+            const totalTasks = projectData.reduce((acc, s) => acc + s.tasks.length, 0);
+            const doneTasks = projectData.reduce((acc, s) => acc + s.tasks.filter(t => {
+                const st = state[s.id]?.[t.id];
+                return st && (st.status === 'done' || st.status === 'final');
+            }).length, 0);
+            if (doneTasks > 0 && doneTasks < totalTasks) {
+                showMascotte('⏰ Petit rappel', 'N\'oublie pas de valider tes tâches !', 4000);
+            }
+        }, 30000);
+    </script>
 </body>
 </html>
