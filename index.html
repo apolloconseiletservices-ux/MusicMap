@@ -3,388 +3,66 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MusicMap V2 - Chef de Projet Musical</title>
+    <title>MusicMap - Chef de Projet Musical</title>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Segoe UI', system-ui, sans-serif;
-        }
-        body {
-            background: #0b0a0f;
-            min-height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            padding: 20px;
-            color: #fff;
-        }
-        .app {
-            max-width: 900px;
-            width: 100%;
-            background: #14121a;
-            border-radius: 40px;
-            padding: 30px 25px;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.8), 0 0 0 1px #2c2638 inset;
-            transition: 0.3s;
-            position: relative;
-        }
-        h1 {
-            font-size: 28px;
-            font-weight: 600;
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            margin-bottom: 5px;
-        }
-        h1 span {
-            background: #2a1f3a;
-            padding: 4px 14px;
-            border-radius: 100px;
-            font-size: 14px;
-            color: #b389f0;
-        }
-        .sub {
-            color: #a090b8;
-            font-size: 14px;
-            margin-bottom: 25px;
-            border-left: 3px solid #7b4cbf;
-            padding-left: 16px;
-        }
-        .jauge {
-            height: 10px;
-            background: #2a243b;
-            border-radius: 40px;
-            margin: 15px 0 20px;
-            overflow: hidden;
-        }
-        .jauge-fill {
-            height: 100%;
-            width: 0%;
-            background: linear-gradient(to right, #7b4cbf, #3ccf8e);
-            transition: 0.3s;
-        }
-        .steps-grid {
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-            margin-top: 15px;
-        }
-        .step-card {
-            background: #1e1a28;
-            border-radius: 20px;
-            padding: 16px 20px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            border: 1px solid transparent;
-            transition: 0.3s;
-            cursor: pointer;
-            opacity: 0.7;
-        }
-        .step-card.active {
-            opacity: 1;
-            border-color: #7b4cbf;
-            background: #231d32;
-            box-shadow: 0 0 20px #7b4cbf22;
-        }
-        .step-card.done {
-            opacity: 0.9;
-            border-color: #3ccf8e;
-            background: #1a2a24;
-        }
-        .step-card.done .step-num {
-            background: #3ccf8e;
-            color: #0b0a0f;
-        }
-        .step-left {
-            display: flex;
-            align-items: center;
-            gap: 16px;
-            flex: 1;
-        }
-        .step-num {
-            width: 44px;
-            height: 44px;
-            border-radius: 40px;
-            background: #2a243b;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: 700;
-            font-size: 18px;
-            color: #8c78a3;
-            flex-shrink: 0;
-        }
-        .step-info h4 {
-            font-size: 16px;
-            font-weight: 500;
-        }
-        .step-info p {
-            font-size: 13px;
-            color: #8977b0;
-            margin: 0;
-        }
-        .step-badge {
-            font-size: 12px;
-            padding: 4px 12px;
-            border-radius: 40px;
-            background: #2a243b;
-            color: #b389f0;
-        }
-        .step-badge.done {
-            background: #3ccf8e;
-            color: #0b0a0f;
-        }
-        .zoom-view {
-            display: none;
-            margin-top: 20px;
-            background: #1a1822;
-            border-radius: 24px;
-            padding: 20px;
-            border: 1px solid #2c2638;
-            animation: fadeIn 0.4s;
-        }
-        .zoom-view.active {
-            display: block;
-        }
-        @keyframes fadeIn {
-            0% {
-                opacity: 0;
-                transform: translateY(10px);
-            }
-            100% {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-        .zoom-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 18px;
-        }
-        .zoom-header h3 {
-            font-size: 20px;
-        }
-        .zoom-header button {
-            background: #2a243b;
-            border: none;
-            color: #fff;
-            padding: 6px 18px;
-            border-radius: 40px;
-            cursor: pointer;
-            font-size: 14px;
-        }
-        .zoom-header button:hover {
-            background: #3a2f50;
-        }
-        .task-list {
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-        }
-        .task-item {
-            background: #14121a;
-            border-radius: 16px;
-            padding: 14px 18px;
-            border-left: 5px solid #555;
-            display: flex;
-            flex-direction: column;
-            gap: 6px;
-            transition: 0.2s;
-            opacity: 0.6;
-        }
-        .task-item.active-task {
-            opacity: 1;
-            border-left-color: #7b4cbf;
-        }
-        .task-item.done-task {
-            opacity: 0.9;
-            border-left-color: #3ccf8e;
-        }
-        .task-item.orange-task {
-            border-left-color: #f5a623;
-        }
-        .task-item.red-task {
-            border-left-color: #e74c3c;
-        }
-        .task-top {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-        .task-top h4 {
-            font-size: 15px;
-            font-weight: 500;
-        }
-        .task-top .task-status {
-            font-size: 12px;
-            padding: 2px 12px;
-            border-radius: 40px;
-            background: #2a243b;
-            color: #b389f0;
-        }
-        .task-top .task-status.done {
-            background: #3ccf8e;
-            color: #0b0a0f;
-        }
-        .task-instruction {
-            font-size: 13px;
-            color: #a090b8;
-        }
-        .task-timer {
-            font-size: 13px;
-            font-weight: 600;
-            color: #b389f0;
-        }
-        .task-actions {
-            display: flex;
-            gap: 10px;
-            margin-top: 6px;
-            flex-wrap: wrap;
-        }
-        .task-actions button {
-            background: #2a243b;
-            border: none;
-            color: #fff;
-            padding: 6px 16px;
-            border-radius: 40px;
-            cursor: pointer;
-            font-size: 12px;
-            transition: 0.2s;
-        }
-        .task-actions button:hover {
-            background: #3a2f50;
-        }
-        .task-actions button.validate {
-            background: #7b4cbf;
-        }
-        .task-actions button.validate:hover {
-            background: #9675dc;
-        }
-        .task-actions button.final {
-            background: #3ccf8e;
-            color: #0b0a0f;
-        }
-        .task-actions button.final:hover {
-            background: #45dc9c;
-        }
-        .task-actions button:disabled {
-            opacity: 0.4;
-            cursor: not-allowed;
-            pointer-events: none;
-        }
-        .task-input {
-            margin-top: 6px;
-            display: flex;
-            gap: 8px;
-            align-items: center;
-            flex-wrap: wrap;
-        }
-        .task-input input {
-            background: #0b0a0f;
-            border: 1px solid #2c2638;
-            border-radius: 40px;
-            padding: 6px 14px;
-            color: #fff;
-            font-size: 13px;
-            flex: 1;
-            min-width: 150px;
-        }
-        .task-input input:focus {
-            outline: none;
-            border-color: #7b4cbf;
-        }
-        .task-input button {
-            background: #2a243b;
-            border: none;
-            color: #fff;
-            padding: 6px 16px;
-            border-radius: 40px;
-            cursor: pointer;
-            font-size: 12px;
-        }
-        .task-input button:hover {
-            background: #3a2f50;
-        }
-        .mascotte-popup {
-            position: fixed;
-            bottom: 30px;
-            right: 30px;
-            background: #1e1a28;
-            border: 1px solid #7b4cbf;
-            border-radius: 24px;
-            padding: 20px 24px;
-            max-width: 320px;
-            color: #fff;
-            display: none;
-            z-index: 999;
-            animation: slideIn 0.6s;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.8);
-        }
-        .mascotte-popup.active {
-            display: block;
-        }
-        @keyframes slideIn {
-            0% {
-                transform: translateX(100px);
-                opacity: 0;
-            }
-            100% {
-                transform: translateX(0);
-                opacity: 1;
-            }
-        }
-        .mascotte-popup .mascotte-emoji {
-            font-size: 40px;
-            text-align: center;
-        }
-        .mascotte-popup .mascotte-msg {
-            font-size: 14px;
-            margin: 10px 0;
-            text-align: center;
-            color: #c0b0d8;
-        }
-        .mascotte-popup .mascotte-btn {
-            background: #7b4cbf;
-            border: none;
-            color: #fff;
-            padding: 8px 20px;
-            border-radius: 40px;
-            cursor: pointer;
-            font-size: 13px;
-            display: block;
-            margin: 0 auto;
-        }
-        .mascotte-popup .mascotte-btn:hover {
-            background: #9675dc;
-        }
-        @media (max-width: 600px) {
-            .app {
-                padding: 16px;
-            }
-            .step-card {
-                flex-wrap: wrap;
-            }
-            .task-top {
-                flex-wrap: wrap;
-                gap: 6px;
-            }
-            .mascotte-popup {
-                right: 10px;
-                left: 10px;
-                max-width: unset;
-            }
-        }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', system-ui, sans-serif; }
+        body { background: #0b0a0f; min-height: 100vh; display: flex; justify-content: center; align-items: center; padding: 20px; color: #fff; }
+        .app { max-width: 900px; width: 100%; background: #14121a; border-radius: 40px; padding: 30px 25px; box-shadow: 0 20px 40px rgba(0,0,0,0.8), 0 0 0 1px #2c2638 inset; }
+        h1 { font-size: 28px; font-weight: 600; display: flex; align-items: center; gap: 12px; margin-bottom: 5px; }
+        h1 span { background: #2a1f3a; padding: 4px 14px; border-radius: 100px; font-size: 14px; color: #b389f0; }
+        .sub { color: #a090b8; font-size: 14px; margin-bottom: 25px; border-left: 3px solid #7b4cbf; padding-left: 16px; }
+        .jauge { height: 10px; background: #2a243b; border-radius: 40px; margin: 15px 0 20px; overflow: hidden; }
+        .jauge-fill { height: 100%; width: 0%; background: linear-gradient(to right, #7b4cbf, #3ccf8e); transition: 0.3s; }
+        .steps-grid { display: flex; flex-direction: column; gap: 10px; margin-top: 15px; }
+        .step-card { background: #1e1a28; border-radius: 20px; padding: 16px 20px; display: flex; align-items: center; justify-content: space-between; border: 1px solid transparent; cursor: pointer; opacity: 0.7; transition: 0.3s; }
+        .step-card.active { opacity: 1; border-color: #7b4cbf; background: #231d32; box-shadow: 0 0 20px #7b4cbf22; }
+        .step-card.done { opacity: 0.9; border-color: #3ccf8e; background: #1a2a24; }
+        .step-card.done .step-num { background: #3ccf8e; color: #0b0a0f; }
+        .step-left { display: flex; align-items: center; gap: 16px; flex: 1; }
+        .step-num { width: 44px; height: 44px; border-radius: 40px; background: #2a243b; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 18px; color: #8c78a3; flex-shrink: 0; }
+        .step-info h4 { font-size: 16px; font-weight: 500; }
+        .step-info p { font-size: 13px; color: #8977b0; margin: 0; }
+        .step-badge { font-size: 12px; padding: 4px 12px; border-radius: 40px; background: #2a243b; color: #b389f0; }
+        .step-badge.done { background: #3ccf8e; color: #0b0a0f; }
+        .zoom-view { display: none; margin-top: 20px; background: #1a1822; border-radius: 24px; padding: 20px; border: 1px solid #2c2638; animation: fadeIn 0.4s; }
+        .zoom-view.active { display: block; }
+        @keyframes fadeIn { 0% { opacity: 0; transform: translateY(10px); } 100% { opacity: 1; transform: translateY(0); } }
+        .zoom-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 18px; }
+        .zoom-header h3 { font-size: 20px; }
+        .zoom-header button { background: #2a243b; border: none; color: #fff; padding: 6px 18px; border-radius: 40px; cursor: pointer; font-size: 14px; }
+        .task-list { display: flex; flex-direction: column; gap: 12px; }
+        .task-item { background: #14121a; border-radius: 16px; padding: 14px 18px; border-left: 5px solid #555; display: flex; flex-direction: column; gap: 6px; opacity: 0.6; transition: 0.2s; }
+        .task-item.active-task { opacity: 1; border-left-color: #7b4cbf; }
+        .task-item.done-task { opacity: 0.9; border-left-color: #3ccf8e; }
+        .task-item.orange-task { border-left-color: #f5a623; }
+        .task-item.red-task { border-left-color: #e74c3c; }
+        .task-top { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 6px; }
+        .task-top h4 { font-size: 15px; font-weight: 500; }
+        .task-top .task-status { font-size: 12px; padding: 2px 12px; border-radius: 40px; background: #2a243b; color: #b389f0; }
+        .task-top .task-status.done { background: #3ccf8e; color: #0b0a0f; }
+        .task-instruction { font-size: 13px; color: #a090b8; }
+        .task-timer { font-size: 13px; font-weight: 600; color: #b389f0; }
+        .task-actions { display: flex; gap: 10px; margin-top: 6px; flex-wrap: wrap; }
+        .task-actions button { background: #2a243b; border: none; color: #fff; padding: 6px 16px; border-radius: 40px; cursor: pointer; font-size: 12px; transition: 0.2s; }
+        .task-actions button:hover { background: #3a2f50; }
+        .task-actions button.validate { background: #7b4cbf; }
+        .task-actions button.validate:hover { background: #9675dc; }
+        .task-actions button.final { background: #3ccf8e; color: #0b0a0f; }
+        .task-actions button:disabled { opacity: 0.4; cursor: not-allowed; pointer-events: none; }
+        .mascotte-popup { position: fixed; bottom: 30px; right: 30px; background: #1e1a28; border: 1px solid #7b4cbf; border-radius: 24px; padding: 20px 24px; max-width: 320px; color: #fff; display: none; z-index: 999; animation: slideIn 0.6s; box-shadow: 0 10px 30px rgba(0,0,0,0.8); }
+        .mascotte-popup.active { display: block; }
+        @keyframes slideIn { 0% { transform: translateX(100px); opacity: 0; } 100% { transform: translateX(0); opacity: 1; } }
+        .mascotte-popup .mascotte-emoji { font-size: 40px; text-align: center; }
+        .mascotte-popup .mascotte-msg { font-size: 14px; margin: 10px 0; text-align: center; color: #c0b0d8; }
+        .mascotte-popup .mascotte-btn { background: #7b4cbf; border: none; color: #fff; padding: 8px 20px; border-radius: 40px; cursor: pointer; font-size: 13px; display: block; margin: 0 auto; }
+        @media (max-width: 600px) { .app { padding: 16px; } .step-card { flex-wrap: wrap; } .mascotte-popup { right: 10px; left: 10px; max-width: unset; } }
     </style>
 </head>
 <body>
 
 <div class="app">
-    <h1>🎵 MusicMap <span>V2.0</span></h1>
-    <div class="sub">Chef de projet musical automatisé — 11 étapes clés</div>
+    <h1>🎵 MusicMap <span>V2.1</span></h1>
+    <div class="sub">Chef de projet musical automatisé — 6 étapes clés</div>
     <div class="jauge"><div class="jauge-fill" id="globalProgress"></div></div>
 
     <div id="macroView">
@@ -407,82 +85,107 @@
 </div>
 
 <script>
-    const projectData = [{
-        id: 1,
-        title: "📱 Comprendre & s'engager",
-        desc: "Fiche artiste, accord, accès",
-        tasks: [
-            { id: 1.1, instruction: "Remplis ta fiche artiste (nom, genre, liens)", duration: 2, status: 'todo' },
-            { id: 1.2, instruction: "Signe l'accord de planning (valide les délais)", duration: 1, status: 'todo' },
-            { id: 1.3, instruction: "Donne les accès à tes comptes (Spotify, Insta...)", duration: 1, status: 'todo' }
-        ]
-    }, {
-        id: 2,
-        title: "🎬 Préparer la musique",
-        desc: "Fichier final, infos, validation",
-        tasks: [
-            { id: 2.1, instruction: "Envoie le fichier audio final (WAV/MP3)", duration: 3, status: 'todo' },
-            { id: 2.2, instruction: "Remplis les infos du titre (titre, featuring, durée)", duration: 1, status: 'todo' },
-            { id: 2.3, instruction: "Valide le son définitif (mix/master)", duration: 2, status: 'todo' }
-        ]
-    }, {
-        id: 3,
-        title: "🎨 Créer l'habillage",
-        desc: "Pochette, visuels, teaser",
-        tasks: [
-            { id: 3.1, instruction: "Valide la pochette (carrée, format plateformes)", duration: 3, status: 'todo' },
-            { id: 3.2, instruction: "Fournis une photo ou vidéo teaser", duration: 2, status: 'todo' },
-            { id: 3.3, instruction: "Valide l'image finale", duration: 2, status: 'todo' }
-        ]
-    }, {
-        id: 4,
-        title: "📢 Lancer la promo",
-        desc: "Comptes, vidéos, dossier presse",
-        tasks: [
-            { id: 4.1, instruction: "Vérifie tes comptes TikTok/Insta/Spotify", duration: 2, status: 'todo' },
-            { id: 4.2, instruction: "Prépare 3 vidéos pour annoncer", duration: 4, status: 'todo' },
-            { id: 4.3, instruction: "Envoie le dossier à des contacts (presse, blog)", duration: 3, status: 'todo' }
-        ]
-    }, {
-        id: 5,
-        title: "🚀 Sortir le titre",
-        desc: "Vérification, publications, emailing",
-        tasks: [
-            { id: 5.1, instruction: "Vérifie que la musique est bien en ligne partout", duration: 1, status: 'todo' },
-            { id: 5.2, instruction: "Publie les annonces sur les réseaux", duration: 1, status: 'todo' },
-            { id: 5.3, instruction: "Envoie un email à tes fans", duration: 1, status: 'todo' }
-        ]
-    }, {
-        id: 6,
-        title: "📊 Faire le bilan",
-        desc: "Chiffres, retours, clôture",
-        tasks: [
-            { id: 6.1, instruction: "Regarde les chiffres (streams, vues)", duration: 2, status: 'todo' },
-            { id: 6.2, instruction: "Recueille les retours", duration: 2, status: 'todo' },
-            { id: 6.3, instruction: "Valide la clôture du projet", duration: 1, status: 'todo' }
-        ]
-    }];
+    // ===== DONNÉES =====
+    const projectData = [
+        { id: 1, title: "📱 Comprendre & s'engager", desc: "Fiche artiste, accord, accès", tasks: [
+            { id: "1.1", instruction: "Remplis ta fiche artiste (nom, genre, liens)", duration: 2 },
+            { id: "1.2", instruction: "Signe l'accord de planning (valide les délais)", duration: 1 },
+            { id: "1.3", instruction: "Donne les accès à tes comptes (Spotify, Insta...)", duration: 1 }
+        ]},
+        { id: 2, title: "🎬 Préparer la musique", desc: "Fichier final, infos, validation", tasks: [
+            { id: "2.1", instruction: "Envoie le fichier audio final (WAV/MP3)", duration: 3 },
+            { id: "2.2", instruction: "Remplis les infos du titre (titre, featuring, durée)", duration: 1 },
+            { id: "2.3", instruction: "Valide le son définitif (mix/master)", duration: 2 }
+        ]},
+        { id: 3, title: "🎨 Créer l'habillage", desc: "Pochette, visuels, teaser", tasks: [
+            { id: "3.1", instruction: "Valide la pochette (carrée, format plateformes)", duration: 3 },
+            { id: "3.2", instruction: "Fournis une photo ou vidéo teaser", duration: 2 },
+            { id: "3.3", instruction: "Valide l'image finale", duration: 2 }
+        ]},
+        { id: 4, title: "📢 Lancer la promo", desc: "Comptes, vidéos, dossier presse", tasks: [
+            { id: "4.1", instruction: "Vérifie tes comptes TikTok/Insta/Spotify", duration: 2 },
+            { id: "4.2", instruction: "Prépare 3 vidéos pour annoncer", duration: 4 },
+            { id: "4.3", instruction: "Envoie le dossier à des contacts (presse, blog)", duration: 3 }
+        ]},
+        { id: 5, title: "🚀 Sortir le titre", desc: "Vérification, publications, emailing", tasks: [
+            { id: "5.1", instruction: "Vérifie que la musique est bien en ligne partout", duration: 1 },
+            { id: "5.2", instruction: "Publie les annonces sur les réseaux", duration: 1 },
+            { id: "5.3", instruction: "Envoie un email à tes fans", duration: 1 }
+        ]},
+        { id: 6, title: "📊 Faire le bilan", desc: "Chiffres, retours, clôture", tasks: [
+            { id: "6.1", instruction: "Regarde les chiffres (streams, vues)", duration: 2 },
+            { id: "6.2", instruction: "Recueille les retours", duration: 2 },
+            { id: "6.3", instruction: "Valide la clôture du projet", duration: 1 }
+        ]}
+    ];
 
-    projectData.forEach(step => {
-        step.tasks.forEach(t => {
-            t.durationDays = t.duration || 2;
-            t.startDate = new Date();
-            t.status = 'todo';
-            t.comment = '';
-        });
-    });
-
+    // ===== ÉTAT =====
+    let state = {};
     let currentStepId = null;
     let mascotteTimer = null;
+    let timerInterval = null;
 
+    function initState() {
+        projectData.forEach(step => {
+            state[step.id] = {};
+            step.tasks.forEach(task => {
+                state[step.id][task.id] = {
+                    status: 'todo',
+                    comment: '',
+                    startTime: null
+                };
+            });
+        });
+    }
+
+    function loadState() {
+        try {
+            const saved = sessionStorage.getItem('musicMapState');
+            if (saved) {
+                state = JSON.parse(saved);
+                // Vérifier que toutes les tâches existent
+                projectData.forEach(step => {
+                    if (!state[step.id]) state[step.id] = {};
+                    step.tasks.forEach(task => {
+                        if (!state[step.id][task.id]) {
+                            state[step.id][task.id] = { status: 'todo', comment: '', startTime: null };
+                        }
+                    });
+                });
+            } else {
+                initState();
+            }
+        } catch(e) {
+            initState();
+        }
+    }
+
+    function saveState() {
+        try {
+            sessionStorage.setItem('musicMapState', JSON.stringify(state));
+        } catch(e) {}
+    }
+
+    // ===== RENDU =====
     function renderMacro() {
         const container = document.getElementById('stepsContainer');
         container.innerHTML = '';
         let totalDone = 0;
-        projectData.forEach((step, idx) => {
-            const allDone = step.tasks.every(t => t.status === 'final' || t.status === 'done');
+        let totalTasks = 0;
+        let doneTasks = 0;
+
+        projectData.forEach(step => {
+            const stepTasks = step.tasks;
+            totalTasks += stepTasks.length;
+            let stepDone = 0;
+            stepTasks.forEach(task => {
+                const s = state[step.id]?.[task.id]?.status;
+                if (s === 'done' || s === 'final') stepDone++;
+            });
+            doneTasks += stepDone;
+            const allDone = stepDone === stepTasks.length;
             if (allDone) totalDone++;
-            const isActive = (currentStepId === step.id);
+            const isActive = currentStepId === step.id;
 
             const card = document.createElement('div');
             card.className = 'step-card' + (allDone ? ' done' : '') + (isActive ? ' active' : '');
@@ -494,18 +197,18 @@
                         <p>${step.desc}</p>
                     </div>
                 </div>
-                <div class="step-badge ${allDone ? 'done' : ''}">${allDone ? '✅ Terminé' : step.tasks.filter(t=>t.status==='done'||t.status==='final').length+'/'+step.tasks.length}</div>
+                <div class="step-badge ${allDone ? 'done' : ''}">${allDone ? '✅ Terminé' : stepDone+'/'+stepTasks.length}</div>
             `;
             card.onclick = () => openZoom(step.id);
             container.appendChild(card);
         });
-        const totalTasks = projectData.reduce((acc, s) => acc + s.tasks.length, 0);
-        const doneTasks = projectData.reduce((acc, s) => acc + s.tasks.filter(t => t.status === 'final' || t.status === 'done').length, 0);
+
         const pct = totalTasks > 0 ? Math.round((doneTasks / totalTasks) * 100) : 0;
         document.getElementById('globalProgress').style.width = pct + '%';
     }
 
     function openZoom(stepId) {
+        if (timerInterval) clearInterval(timerInterval);
         currentStepId = stepId;
         const step = projectData.find(s => s.id === stepId);
         if (!step) return;
@@ -513,10 +216,18 @@
         document.getElementById('macroView').style.display = 'none';
         document.getElementById('zoomView').classList.add('active');
         renderTasks(step);
-        checkDelays(step);
+        // Lancer le timer de mise à jour toutes les 10 secondes
+        timerInterval = setInterval(() => {
+            if (currentStepId) {
+                const s = projectData.find(p => p.id === currentStepId);
+                if (s) renderTasks(s);
+            }
+        }, 10000);
     }
 
     function closeZoom() {
+        if (timerInterval) clearInterval(timerInterval);
+        timerInterval = null;
         currentStepId = null;
         document.getElementById('macroView').style.display = 'block';
         document.getElementById('zoomView').classList.remove('active');
@@ -527,21 +238,41 @@
         const container = document.getElementById('taskContainer');
         container.innerHTML = '';
         let previousDone = true;
+
         step.tasks.forEach((task, idx) => {
-            const isActive = previousDone && (task.status === 'todo' || task.status === 'doing');
-            const isDone = task.status === 'done' || task.status === 'final';
-            const isFinal = task.status === 'final';
-            const elapsedDays = Math.floor(Math.random() * (task.durationDays + 2));
-            const isLate = elapsedDays > task.durationDays;
-            const isAlmostLate = elapsedDays >= task.durationDays - 1 && !isLate;
+            const taskState = state[step.id]?.[task.id] || { status: 'todo', comment: '', startTime: null };
+            const isActive = previousDone && (taskState.status === 'todo' || taskState.status === 'doing');
+            const isDone = taskState.status === 'done' || taskState.status === 'final';
+            const isFinal = taskState.status === 'final';
+
+            // Calcul du temps écoulé
+            let elapsedDays = 0;
+            let timeDisplay = '';
+            if (taskState.startTime) {
+                const elapsedMs = Date.now() - taskState.startTime;
+                elapsedDays = elapsedMs / (1000 * 60 * 60 * 24);
+                const remaining = Math.max(0, task.duration * 24 * 60 * 60 * 1000 - elapsedMs);
+                const days = Math.floor(remaining / (1000 * 60 * 60 * 24));
+                const hours = Math.floor((remaining % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                const minutes = Math.floor((remaining % (1000 * 60 * 60)) / (1000 * 60));
+                timeDisplay = `⏱️ Temps restant : ${days}j ${hours}h ${minutes}m`;
+            } else if (isDone && !isFinal) {
+                timeDisplay = '✅ Tâche terminée (modifiable)';
+            } else if (isFinal) {
+                timeDisplay = '🔒 Tâche définitivement validée';
+            } else {
+                timeDisplay = `⏱️ Durée estimée : ${task.duration} jour${task.duration>1?'s':''}`;
+            }
+
+            const isLate = elapsedDays > task.duration && !isDone;
+            const isAlmostLate = elapsedDays >= task.duration * 0.8 && !isLate && !isDone;
 
             const div = document.createElement('div');
             div.className = 'task-item';
             if (isDone) div.classList.add('done-task');
             else if (isActive) div.classList.add('active-task');
-            else div.classList.add('inactive-task');
-            if (isLate) div.classList.add('red-task');
-            else if (isAlmostLate) div.classList.add('orange-task');
+            if (isLate && !isDone) div.classList.add('red-task');
+            else if (isAlmostLate && !isDone) div.classList.add('orange-task');
 
             const statusLabel = isFinal ? '✅ Définitif' : isDone ? '✔️ Terminé' : isActive ? '⏳ En cours' : '⏹️ Bloqué';
 
@@ -551,95 +282,95 @@
                     <span class="task-status ${isDone ? 'done' : ''}">${statusLabel}</span>
                 </div>
                 <div class="task-instruction">📌 ${task.instruction}</div>
-                <div class="task-timer">⏱ Durée estimée : ${task.durationDays} jour${task.durationDays>1?'s':''}</div>
-                ${task.comment ? `<div style="font-size:13px;color:#b389f0;">💬 ${task.comment}</div>` : ''}
+                <div class="task-timer">${timeDisplay}</div>
+                ${taskState.comment ? `<div style="font-size:13px;color:#b389f0;">💬 ${taskState.comment}</div>` : ''}
                 <div class="task-actions">
                     ${!isFinal ? `
-                        <button ${isActive ? '' : 'disabled'} class="validate" onclick="doTask(${step.id}, ${idx}, 'done')">✔️ Terminer</button>
-                        <button ${isActive ? '' : 'disabled'} onclick="doTask(${step.id}, ${idx}, 'final')" class="final">🔒 Terminer définitif</button>
-                        <button onclick="addComment(${step.id}, ${idx})">💬 Commentaire</button>
+                        <button ${isActive ? '' : 'disabled'} class="validate" onclick="doTask(${step.id}, '${task.id}', 'done')">✔️ Terminer</button>
+                        <button ${isActive ? '' : 'disabled'} onclick="doTask(${step.id}, '${task.id}', 'final')" class="final">🔒 Terminer définitif</button>
+                        <button onclick="addComment(${step.id}, '${task.id}')">💬 Commentaire</button>
                     ` : `
                         <span style="color:#3ccf8e;">✅ Tâche définitivement validée</span>
-                        <button onclick="requestRevert(${step.id}, ${idx})">↩️ Demander retour admin</button>
+                        <button onclick="requestRevert(${step.id}, '${task.id}')">↩️ Demander retour admin</button>
                     `}
                 </div>
-                ${isLate && !isFinal ? `<div style="color:#e74c3c;font-size:13px;margin-top:4px;">⚠️ Retard ! Cette tâche est en dépassement.</div>` : ''}
-                ${isAlmostLate && !isLate && !isFinal ? `<div style="color:#f5a623;font-size:13px;margin-top:4px;">⏳ Attention, bientôt en retard.</div>` : ''}
+                ${isLate && !isDone ? `<div style="color:#e74c3c;font-size:13px;margin-top:4px;">⚠️ Retard ! Cette tâche est en dépassement.</div>` : ''}
+                ${isAlmostLate && !isLate && !isDone ? `<div style="color:#f5a623;font-size:13px;margin-top:4px;">⏳ Attention, bientôt en retard.</div>` : ''}
             `;
             container.appendChild(div);
             if (!isDone) previousDone = false;
         });
     }
 
-    function doTask(stepId, taskIdx, status) {
+    // ===== ACTIONS =====
+    function doTask(stepId, taskId, status) {
         const step = projectData.find(s => s.id === stepId);
         if (!step) return;
-        const task = step.tasks[taskIdx];
+        const task = step.tasks.find(t => t.id === taskId);
         if (!task) return;
-        if (taskIdx > 0) {
-            const prev = step.tasks[taskIdx - 1];
-            if (prev.status !== 'final' && prev.status !== 'done') {
-                showMascotte('⛔ Bloqué !', 'Tu dois d\'abord terminer la tâche précédente.');
+        const taskState = state[stepId]?.[taskId];
+        if (!taskState) return;
+
+        // Vérifier la tâche précédente
+        const idx = step.tasks.indexOf(task);
+        if (idx > 0) {
+            const prevTask = step.tasks[idx - 1];
+            const prevState = state[stepId]?.[prevTask.id];
+            if (prevState && prevState.status !== 'final' && prevState.status !== 'done') {
+                showMascotte('⛔ Bloqué', 'Termine d\'abord la tâche précédente.');
                 return;
             }
         }
-        task.status = status;
-        if (status === 'done') {
-            showMascotte('✅ Bien joué !', 'Tâche terminée. Passe à la suivante.');
-        } else if (status === 'final') {
-            showMascotte('🔒 Validé définitif !', 'Cette tâche est verrouillée. Bravo !');
-        }
-        const allFinal = step.tasks.every(t => t.status === 'final');
-        if (allFinal) {
-            showMascotte('🎉 Étape complète !', 'Toutes les tâches de cette étape sont définitivement validées.');
-        }
-        renderTasks(step);
-        renderMacro();
-        saveState();
-        checkDelays(step);
-    }
 
-    function addComment(stepId, taskIdx) {
-        const step = projectData.find(s => s.id === stepId);
-        if (!step) return;
-        const task = step.tasks[taskIdx];
-        if (!task) return;
-        const comment = prompt('Ajoute un commentaire pour cette tâche :', task.comment || '');
-        if (comment !== null) {
-            task.comment = comment;
-            renderTasks(step);
-            saveState();
+        if (taskState.status === 'todo' && status !== 'final') {
+            taskState.startTime = Date.now();
         }
-    }
+        taskState.status = status;
 
-    function requestRevert(stepId, taskIdx) {
-        if (confirm('Demander à l\'administrateur de revenir sur cette tâche définitivement validée ?')) {
-            showMascotte('📩 Demande envoyée !', 'Un email a été envoyé à l\'administrateur pour déverrouiller cette tâche.');
-        }
-    }
+        if (status === 'done') showMascotte('✅ Bien joué', 'Tâche terminée !');
+        else if (status === 'final') showMascotte('🔒 Validé définitif', 'Tâche verrouillée.');
 
-    function checkDelays(step) {
-        step.tasks.forEach(task => {
-            if (task.status === 'todo' || task.status === 'doing') {
-                const elapsed = Math.floor(Math.random() * (task.durationDays + 3));
-                if (elapsed > task.durationDays) {
-                    showMascotte('⏰ Retard détecté !', `La tâche ${task.id} est en retard de ${elapsed - task.durationDays} jour(s).`);
-                } else if (elapsed >= task.durationDays - 1) {
-                    showMascotte('⚠️ Bientôt en retard !', `La tâche ${task.id} doit être terminée sous peu.`);
-                }
-            }
+        // Vérifier si l'étape est complète
+        const allFinal = step.tasks.every(t => {
+            const s = state[stepId]?.[t.id];
+            return s && (s.status === 'final' || s.status === 'done');
         });
+        if (allFinal) showMascotte('🎉 Étape complète', 'Toutes les tâches sont validées !');
+
+        saveState();
+        if (currentStepId === stepId) renderTasks(step);
+        renderMacro();
     }
 
+    function addComment(stepId, taskId) {
+        const taskState = state[stepId]?.[taskId];
+        if (!taskState) return;
+        const comment = prompt('Ajoute un commentaire :', taskState.comment || '');
+        if (comment !== null) {
+            taskState.comment = comment;
+            saveState();
+            const step = projectData.find(s => s.id === stepId);
+            if (step && currentStepId === stepId) renderTasks(step);
+        }
+    }
+
+    function requestRevert(stepId, taskId) {
+        if (confirm('Demander à l\'administrateur de déverrouiller cette tâche ?')) {
+            const email = 'admin@musicmap.com';
+            const subject = encodeURIComponent('Demande retour - Tâche ' + taskId);
+            const body = encodeURIComponent('Bonjour,\n\nJe souhaite revenir sur la tâche ' + taskId + '.\n\nMerci de la déverrouiller.\n\nClient MusicMap.');
+            window.location.href = 'mailto:' + email + '?subject=' + subject + '&body=' + body;
+            showMascotte('📩 Demande envoyée', 'Email ouvert pour l\'admin.');
+        }
+    }
+
+    // ===== MASCOOTTE =====
     function showMascotte(title, msg) {
         const popup = document.getElementById('mascottePopup');
-        document.querySelector('.mascotte-emoji').textContent = '🧑‍🚀';
         document.getElementById('mascotteMsg').innerHTML = `<strong>${title}</strong><br>${msg}`;
         popup.classList.add('active');
         if (mascotteTimer) clearTimeout(mascotteTimer);
-        mascotteTimer = setTimeout(() => {
-            popup.classList.remove('active');
-        }, 8000);
+        mascotteTimer = setTimeout(() => popup.classList.remove('active'), 8000);
     }
 
     function closeMascotte() {
@@ -647,52 +378,11 @@
         if (mascotteTimer) clearTimeout(mascotteTimer);
     }
 
-    function saveState() {
-        try {
-            const state = projectData.map(step => ({
-                id: step.id,
-                tasks: step.tasks.map(t => ({
-                    id: t.id,
-                    status: t.status,
-                    comment: t.comment
-                }))
-            }));
-            sessionStorage.setItem('musicMapState', JSON.stringify(state));
-        } catch(e) {}
-    }
-
-    function loadState() {
-        try {
-            const saved = sessionStorage.getItem('musicMapState');
-            if (!saved) return;
-            const state = JSON.parse(saved);
-            state.forEach(savedStep => {
-                const step = projectData.find(s => s.id === savedStep.id);
-                if (!step) return;
-                savedStep.tasks.forEach((savedTask, idx) => {
-                    if (step.tasks[idx]) {
-                        step.tasks[idx].status = savedTask.status || 'todo';
-                        step.tasks[idx].comment = savedTask.comment || '';
-                    }
-                });
-            });
-        } catch(e) {}
-    }
-
+    // ===== INIT =====
     loadState();
     renderMacro();
     document.getElementById('macroView').style.display = 'block';
-
-    setInterval(() => {
-        if (currentStepId) {
-            const step = projectData.find(s => s.id === currentStepId);
-            if (step) checkDelays(step);
-        }
-        renderMacro();
-        saveState();
-    }, 30000);
-
-    console.log('🎵 MusicMap V2.0 chargé avec succès !');
+    console.log('🎵 MusicMap V2.1 chargé');
 </script>
 </body>
 </html>
