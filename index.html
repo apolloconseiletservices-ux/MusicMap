@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Projet Musique - Chef de Projet</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', system-ui, sans-serif; }
+    body {
+      background: #0b0a0f;
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+      color: #fff;
+    }
+    .app {
+      max-width: 780px;
+      width: 100%;
+      background: #14121a;
+      border-radius: 40px;
+      padding: 32px 28px;
+      box-shadow: 0 20px 40px rgba(0,0,0,0.8), 0 0 0 1px #2c2638 inset;
+      transition: 0.3s;
+    }
+    h1 {
+      font-size: 26px;
+      font-weight: 600;
+      letter-spacing: -0.5px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 8px;
+    }
+    h1 span { background: #2a1f3a; padding: 4px 14px; border-radius: 100px; font-size: 14px; color: #b389f0; }
+    .sub { color: #a090b8; font-size: 14px; margin-bottom: 28px; border-left: 3px solid #7b4cbf; padding-left: 16px; }
+    .steps { display: flex; flex-direction: column; gap: 10px; }
+    .step {
+      background: #1e1a28;
+      border-radius: 20px;
+      padding: 14px 20px;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      transition: 0.3s;
+      border: 1px solid transparent;
+      cursor: default;
+      opacity: 0.7;
+    }
+    .step.active {
+      opacity: 1;
+      border-color: #7b4cbf;
+      background: #231d32;
+      box-shadow: 0 0 20px #7b4cbf22;
+    }
+    .step.done {
+      opacity: 0.9;
+      border-color: #3ccf8e;
+      background: #1a2a24;
+    }
+    .step.done .num { background: #3ccf8e; color: #0b0a0f; }
+    .num {
+      width: 44px; height: 44px; border-radius: 40px; background: #2a243b;
+      display: flex; align-items: center; justify-content: center;
+      font-weight: 700; font-size: 16px; color: #8c78a3; flex-shrink: 0;
+    }
+    .info { flex: 1; }
+    .info h4 { font-size: 16px; font-weight: 500; margin-bottom: 2px; }
+    .info p { font-size: 13px; color: #8977b0; margin: 0; }
+    .btn {
+      background: #7b4cbf; border: none; color: #fff;
+      padding: 8px 20px; border-radius: 40px; font-size: 14px;
+      font-weight: 600; cursor: pointer; transition: 0.2s; flex-shrink: 0;
+    }
+    .btn:hover { background: #9675dc; transform: scale(1.05); }
+    .btn:disabled { opacity: 0.4; cursor: not-allowed; pointer-events: none; }
+    .btn.success { background: #3ccf8e; color: #0b0a0f; }
+    .btn.success:hover { background: #45dc9c; }
+    .mascotte {
+      position: fixed; bottom: 30px; right: 30px; font-size: 50px;
+      display: none; animation: slideIn 0.6s; z-index: 999;
+    }
+    @keyframes slideIn {
+      0% { transform: translateX(100px); opacity: 0; }
+      100% { transform: translateX(0); opacity: 1; }
+    }
+    .popup {
+      position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+      background: rgba(0,0,0,0.7); display: none;
+      justify-content: center; align-items: center; z-index: 1000;
+    }
+    .popup-box {
+      background: #14121a; padding: 40px; border-radius: 24px;
+      max-width: 400px; text-align: center; border: 1px solid #2c2638;
+    }
+    .popup-box h2 { margin-bottom: 10px; }
+    .popup-box button {
+      background: #7b4cbf; border: none; color: #fff;
+      padding: 12px 24px; border-radius: 40px; cursor: pointer;
+    }
+    .jauge { height: 8px; background: #2a243b; border-radius: 40px; margin: 20px 0 10px; overflow: hidden; }
+    .jauge-fill { height: 100%; width: 0%; background: linear-gradient(to right, #7b4cbf, #3ccf8e); transition: 0.3s; }
+  </style>
+</head>
+<body>
+
+<div class="app" id="app">
+  <h1>🎵 Projet Musique <span>V1.0</span></h1>
+  <div class="sub">Le chef de projet automatisé de A à Z - 11 étapes clés.</div>
+  <div class="jauge"><div class="jauge-fill" id="progres"></div></div>
+  <div class="steps" id="steps"></div>
+</div>
+
+<div class="mascotte" id="mascotte">🧑‍🚀 "Alors, on avance ?" 🚀</div>
+
+<div class="popup" id="popup">
+  <div class="popup-box">
+    <h2 id="popup-titre">Attention !</h2>
+    <p id="popup-message">Message de rappel.</p>
+    <button onclick="fermerPopup()">Compris 😊</button>
+  </div>
+</div>
+
+<script>
+  const etapes = [
+    { id: 1, titre: "📱 Stratégie TikTok", desc: "Attire + Engage + Convertit → Trafic", icone: "📱" },
+    { id: 2, titre: "🎬 Production Exécutive", desc: "Tournage du TikTok en contenu YT, description...", icone: "🎬" },
+    { id: 3, titre: "📤 Plateformes de Diffusion", desc: "Destinations (streaming, social, radio)", icone: "📤" },
+    { id: 4, titre: "📅 Calendrier de Sortie", desc: "Listing par date de sortie globale", icone: "📅" },
+    { id: 5, titre: "📂 Pré-soutis", desc: "Archives, images, textes, emailing", icone: "📂" },
+    { id: 6, titre: "📈 Marketing Digital", desc: "Création de contenu pour TikTok et Insta", icone: "📈" },
+    { id: 7, titre: "🤝 Négociation avec les presse", desc: "Contacts, Communiqués, Pitches par temps", icone: "🤝" },
+    { id: 8, titre: "🎁 Streaming Campaign", desc: "Organisation des premières personnes", icone: "🎁" },
+    { id: 9, titre: "📌 Sortie Officielle", desc: "Annonce vérifiée en région globale", icone: "📌" },
+    { id: 10, titre: "📊 Adaptation et retour", desc: "Suivi du performance et analyse des données", icone: "📊" },
+    { id: 11, titre: "🔁 Livraison et post-sortie", desc: "Lancement sur plateformes, retour sur investissement", icone: "🔁" }
+  ];
+
+  let valides = [];
+  try { valides = JSON.parse(sessionStorage.getItem('valides') || '[]'); } catch(e) {}
+
+  const stepsDiv = document.getElementById('steps');
+  const progres = document.getElementById('progres');
+  const mascotte = document.getElementById('mascotte');
+
+  function afficherEtapes() {
+    stepsDiv.innerHTML = '';
+    let count = 0;
+    etapes.forEach(e => {
+      const fait = valides.includes(e.id);
+      if (fait) count++;
+      const actif = !fait && (valides.length === e.id - 1);
+
+      const div = document.createElement('div');
+      div.className = 'step' + (fait ? ' done' : '') + (actif ? ' active' : '');
+      div.innerHTML = `
+        <div class="num">${e.icone}</div>
+        <div class="info">
+          <h4>${e.titre}</h4>
+          <p>${e.desc}</p>
+        </div>
+        <div>
+          ${fait ? '✅ Validé' : `<button class="btn" onclick="validerEtape(${e.id})">✔️ Valider</button>`}
+        </div>
+      `;
+      stepsDiv.appendChild(div);
+    });
+    const pct = Math.round((count / etapes.length) * 100);
+    progres.style.width = pct + '%';
+    if (pct === 100) {
+      mascotte.innerHTML = '🏆 BRAVO ! Tu as tout réussi ! 🎉';
+      mascotte.style.display = 'block';
+    }
+  }
+
+  function validerEtape(id) {
+    if (valides.includes(id)) return;
+    const dernier = valides.length ? Math.max(...valides) : 0;
+    if (id !== dernier + 1) {
+      afficherPopup('⛔ Attention !', `Il faut réaliser l'étape ${dernier+1} avant de passer à celle-ci !`);
+      return;
+    }
+    valides.push(id);
+    sessionStorage.setItem('valides', JSON.stringify(valides));
+    afficherEtapes();
+    mascotte.innerHTML = '✅ Bien fait ! Étape validée ! 🚀';
+    mascotte.style.display = 'block';
+    setTimeout(() => { mascotte.style.display = 'none'; }, 3000);
+    if (valides.length === etapes.length) {
+      afficherPopup('🎯 Félicitations !', 'Tu as terminé les 11 étapes ! Maintenant, tu gères comme un pro !');
+    }
+  }
+
+  function afficherPopup(titre, msg) {
+    document.getElementById('popup-titre').textContent = titre;
+    document.getElementById('popup-message').textContent = msg;
+    document.getElementById('popup').style.display = 'flex';
+  }
+
+  function fermerPopup() {
+    document.getElementById('popup').style.display = 'none';
+  }
+
+  // Simulation d'un rappel automatique (popup toutes les 20s si inactif)
+  setInterval(() => {
+    if (valides.length > 0 && valides.length < etapes.length) {
+      const prochaine = valides.length + 1;
+      afficherPopup('⏰ Rappel !', `Tu es toujours à l'étape ${prochaine}. N'oublie pas de la valider !`);
+    }
+  }, 20000);
+
+  afficherEtapes();
+</script>
+</body>
+</html>
