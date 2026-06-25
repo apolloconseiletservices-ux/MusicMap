@@ -1,238 +1,290 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MusicMap - Immersive 4.0</title>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>MusicMap – Le chef de projet musical</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet" />
     <style>
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: 'Segoe UI', system-ui, sans-serif;
+        }
+        html {
+            scroll-behavior: smooth;
         }
         body {
+            font-family: 'Inter', sans-serif;
             background: #0b0a0f;
-            min-height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            padding: 20px;
-            color: #fff;
+            color: #ffffff;
+            overflow-x: hidden;
+            line-height: 1.5;
         }
-        .app {
-            max-width: 950px;
-            width: 100%;
+        /* scrollbar */
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+        ::-webkit-scrollbar-track {
             background: #14121a;
-            border-radius: 48px;
-            padding: 30px 28px;
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.9), 0 0 0 1px #2c2638 inset;
-            position: relative;
         }
-        h1 {
-            font-size: 30px;
+        ::-webkit-scrollbar-thumb {
+            background: #7b4cbf;
+            border-radius: 40px;
+        }
+
+        /* ===== HEADER ===== */
+        header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            padding: 16px 28px;
+            background: rgba(11, 10, 15, 0.75);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid rgba(44, 38, 56, 0.4);
             display: flex;
+            justify-content: space-between;
             align-items: center;
-            gap: 14px;
-            margin-bottom: 4px;
         }
-        h1 span {
-            background: #2a1f3a;
-            padding: 4px 18px;
-            border-radius: 100px;
-            font-size: 14px;
-            color: #b389f0;
-        }
-        .sub {
-            color: #a090b8;
-            font-size: 14px;
-            margin-bottom: 22px;
-            border-left: 3px solid #7b4cbf;
-            padding-left: 16px;
-        }
-        .jauge {
-            height: 10px;
-            background: #2a243b;
-            border-radius: 40px;
-            margin: 16px 0 22px;
-            overflow: hidden;
-        }
-        .jauge-fill {
-            height: 100%;
-            width: 0%;
-            background: linear-gradient(to right, #7b4cbf, #3ccf8e);
-            transition: 0.5s;
-        }
-        /* ===== INFOS ARTISTE ===== */
-        .artist-info {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 14px;
-            margin-bottom: 24px;
-            background: #1a1822;
-            padding: 18px 22px;
-            border-radius: 28px;
-            border: 1px solid #2c2638;
-        }
-        .artist-info input {
-            background: #0b0a0f;
-            border: 1px solid #2c2638;
-            border-radius: 40px;
-            padding: 10px 18px;
-            color: #fff;
-            font-size: 14px;
-            flex: 1;
-            min-width: 140px;
-        }
-        .artist-info input:focus {
-            outline: none;
-            border-color: #7b4cbf;
-        }
-        .artist-info label {
-            color: #a090b8;
-            font-size: 13px;
+        header .logo {
+            font-size: 22px;
+            font-weight: 700;
             display: flex;
             align-items: center;
             gap: 8px;
         }
-        /* ===== STEPS ===== */
-        .steps-grid {
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-            margin-top: 10px;
+        header .logo span {
+            color: #b389f0;
         }
-        .step-card {
-            background: #1e1a28;
-            border-radius: 24px;
-            padding: 18px 22px;
+        header nav {
             display: flex;
+            gap: 24px;
             align-items: center;
-            justify-content: space-between;
-            border: 1px solid transparent;
-            cursor: pointer;
-            transition: 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
-            opacity: 0.7;
-            position: relative;
         }
-        .step-card:hover {
-            transform: scale(1.01);
-        }
-        .step-card.active {
-            opacity: 1;
-            border-color: #7b4cbf;
-            background: #231d32;
-            box-shadow: 0 0 30px #7b4cbf33;
-            transform: scale(1.02);
-        }
-        .step-card.done {
-            opacity: 0.95;
-            border-color: #3ccf8e;
-            background: #1a2a24;
-        }
-        .step-card.done .step-num {
-            background: #3ccf8e;
-            color: #0b0a0f;
-        }
-        .step-left {
-            display: flex;
-            align-items: center;
-            gap: 18px;
-            flex: 1;
-        }
-        .step-num {
-            width: 50px;
-            height: 50px;
-            border-radius: 40px;
-            background: #2a243b;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: 700;
-            font-size: 20px;
-            color: #8c78a3;
-            flex-shrink: 0;
+        header nav a {
+            color: #a090b8;
+            text-decoration: none;
+            font-size: 14px;
             transition: 0.3s;
         }
-        .step-info h4 {
-            font-size: 18px;
-            font-weight: 500;
+        header nav a:hover {
+            color: #fff;
         }
-        .step-info p {
+        header nav .btn-cta {
+            background: #7b4cbf;
+            padding: 8px 20px;
+            border-radius: 40px;
+            color: #fff;
+            font-weight: 600;
             font-size: 14px;
-            color: #8977b0;
-            margin: 0;
+            border: none;
+            cursor: pointer;
+            transition: 0.3s;
         }
-        .step-badge {
-            font-size: 13px;
-            padding: 6px 16px;
+        header nav .btn-cta:hover {
+            background: #9675dc;
+            transform: scale(1.05);
+        }
+
+        /* ===== HERO ===== */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 120px 24px 80px;
+            position: relative;
+            background: radial-gradient(circle at 20% 30%, #1a1430, #0b0a0f 70%);
+        }
+        .hero .mascotte-hero {
+            font-size: 80px;
+            animation: bob 1.5s infinite alternate ease-in-out;
+            margin-bottom: 16px;
+        }
+        @keyframes bob {
+            0% { transform: translateY(0) scale(1); }
+            100% { transform: translateY(-12px) scale(1.04); }
+        }
+        .hero h1 {
+            font-size: clamp(40px, 8vw, 72px);
+            font-weight: 700;
+            background: linear-gradient(135deg, #b389f0, #7b4cbf, #3ccf8e);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            max-width: 800px;
+        }
+        .hero p {
+            font-size: 18px;
+            color: #a090b8;
+            max-width: 560px;
+            margin: 16px 0 32px;
+        }
+        .hero .btn-hero {
+            background: #7b4cbf;
+            border: none;
+            padding: 14px 40px;
+            border-radius: 60px;
+            font-size: 18px;
+            font-weight: 600;
+            color: #fff;
+            cursor: pointer;
+            transition: 0.3s;
+            box-shadow: 0 0 40px rgba(123, 76, 191, 0.3);
+        }
+        .hero .btn-hero:hover {
+            background: #9675dc;
+            transform: scale(1.06);
+            box-shadow: 0 0 60px rgba(123, 76, 191, 0.5);
+        }
+        .hero .scroll-indicator {
+            margin-top: 48px;
+            color: #4a3f5a;
+            font-size: 14px;
+            animation: bounceDown 2s infinite;
+        }
+        @keyframes bounceDown {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(8px); }
+        }
+
+        /* ===== SECTIONS ===== */
+        section {
+            padding: 80px 24px;
+            max-width: 1100px;
+            margin: 0 auto;
+        }
+        .section-title {
+            font-size: 32px;
+            font-weight: 600;
+            margin-bottom: 12px;
+        }
+        .section-sub {
+            color: #a090b8;
+            font-size: 18px;
+            margin-bottom: 40px;
+        }
+
+        /* ===== ÉTAPES (cartes) ===== */
+        .steps-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 20px;
+        }
+        .step-card {
+            background: #1a1822;
+            border-radius: 24px;
+            padding: 28px 22px;
+            border: 1px solid #2c2638;
+            transition: 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+            cursor: pointer;
+            opacity: 0;
+            transform: translateY(40px);
+            animation: fadeUp 0.8s forwards;
+            animation-delay: calc(0.1s * var(--i, 1));
+        }
+        .step-card:hover {
+            transform: scale(1.03) translateY(-4px);
+            border-color: #7b4cbf;
+            box-shadow: 0 12px 40px rgba(123, 76, 191, 0.2);
+        }
+        .step-card .num {
+            font-size: 28px;
+            font-weight: 700;
+            color: #b389f0;
+            margin-bottom: 8px;
+        }
+        .step-card h3 {
+            font-size: 20px;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+        .step-card p {
+            color: #8977b0;
+            font-size: 14px;
+        }
+        .step-card .badge {
+            display: inline-block;
+            margin-top: 12px;
+            padding: 4px 14px;
             border-radius: 40px;
             background: #2a243b;
             color: #b389f0;
+            font-size: 12px;
         }
-        .step-badge.done {
+        .step-card .badge.done {
             background: #3ccf8e;
             color: #0b0a0f;
         }
-        /* ===== ZOOM ===== */
-        .zoom-view {
-            display: none;
-            margin-top: 24px;
-            background: #1a1822;
+        @keyframes fadeUp {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* ===== ZOOM (POST-IT) ===== */
+        .zoom-section {
+            background: #14121a;
             border-radius: 32px;
-            padding: 24px;
+            padding: 40px 32px;
+            margin-top: 40px;
             border: 1px solid #2c2638;
+            display: none;
             animation: fadeSlide 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
         }
-        .zoom-view.active {
+        .zoom-section.active {
             display: block;
         }
         @keyframes fadeSlide {
-            0% {
-                opacity: 0;
-                transform: translateY(30px) scale(0.96);
-            }
-            100% {
-                opacity: 1;
-                transform: translateY(0) scale(1);
-            }
+            0% { opacity: 0; transform: translateY(30px) scale(0.96); }
+            100% { opacity: 1; transform: translateY(0) scale(1); }
         }
         .zoom-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 20px;
+            margin-bottom: 24px;
             flex-wrap: wrap;
-            gap: 10px;
+            gap: 12px;
         }
-        .zoom-header h3 {
-            font-size: 22px;
+        .zoom-header h2 {
+            font-size: 24px;
+            font-weight: 600;
         }
         .zoom-header button {
             background: #2a243b;
             border: none;
             color: #fff;
-            padding: 8px 22px;
+            padding: 8px 24px;
             border-radius: 40px;
             cursor: pointer;
-            font-size: 15px;
-            transition: 0.2s;
+            font-size: 14px;
+            transition: 0.3s;
         }
         .zoom-header button:hover {
             background: #3a2f50;
             transform: scale(1.05);
         }
-        /* ===== POST-IT ===== */
+
         .task-list {
             display: flex;
             flex-direction: column;
             gap: 18px;
         }
+        /* POST-IT */
         .task-item {
             background: #f9f3e8;
             color: #1a1a1a;
             border-radius: 16px;
-            padding: 18px 22px;
+            padding: 20px 24px;
             box-shadow: 0 8px 0 #c9b99a, 0 12px 30px rgba(0, 0, 0, 0.5);
             transform: rotate(0deg);
             transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
@@ -375,18 +427,14 @@
         .task-actions button.revert:hover {
             background: #f39c12;
         }
-        /* ===== MASCOOTTE ===== */
+
+        /* ===== MASCOOTTE FLOTTANTE ===== */
         .mascotte-scene {
             position: fixed;
-            bottom: 20px;
-            left: 0;
-            width: 100%;
-            pointer-events: none;
+            bottom: 30px;
+            right: 30px;
             z-index: 9999;
-            display: flex;
-            justify-content: flex-start;
-            align-items: flex-end;
-            padding: 0 20px;
+            pointer-events: none;
         }
         .mascotte {
             display: none;
@@ -404,21 +452,17 @@
             display: flex;
         }
         @keyframes walkIn {
-            0% { transform: translateX(-120px) scale(0.5); opacity: 0; }
+            0% { transform: translateX(80px) scale(0.5); opacity: 0; }
             100% { transform: translateX(0) scale(1); opacity: 1; }
         }
         .mascotte .avatar {
             font-size: 44px;
             animation: bob 1.2s infinite alternate;
         }
-        @keyframes bob {
-            0% { transform: translateY(0); }
-            100% { transform: translateY(-6px); }
-        }
         .mascotte .bubble {
             font-size: 14px;
             color: #c0b0d8;
-            max-width: 240px;
+            max-width: 220px;
         }
         .mascotte .bubble strong {
             color: #fff;
@@ -437,59 +481,95 @@
         .mascotte .close-mascotte:hover {
             background: #3a2f50;
         }
-        @media (max-width: 600px) {
-            .app {
-                padding: 18px;
+
+        /* ===== FOOTER ===== */
+        footer {
+            text-align: center;
+            padding: 40px 24px;
+            color: #4a3f5a;
+            font-size: 14px;
+            border-top: 1px solid #1a1822;
+        }
+
+        /* ===== RESPONSIVE ===== */
+        @media (max-width: 640px) {
+            header nav a {
+                display: none;
             }
-            .step-card {
-                flex-wrap: wrap;
+            header nav .btn-cta {
+                font-size: 12px;
+                padding: 6px 16px;
             }
-            .task-top {
-                flex-direction: column;
-                align-items: flex-start;
+            .hero .mascotte-hero {
+                font-size: 56px;
             }
-            .task-comment input {
-                max-width: 100%;
+            .hero h1 {
+                font-size: 32px;
+            }
+            .zoom-section {
+                padding: 24px 16px;
+            }
+            .task-item {
+                padding: 16px;
+            }
+            .mascotte-scene {
+                bottom: 16px;
+                right: 16px;
             }
             .mascotte {
-                padding: 10px 16px;
+                padding: 8px 14px;
                 flex-wrap: wrap;
             }
             .mascotte .bubble {
-                max-width: 160px;
+                max-width: 140px;
+                font-size: 12px;
             }
         }
     </style>
 </head>
 <body>
 
-    <div class="app">
-        <h1>🎵 MusicMap <span>V4.0</span></h1>
-        <div class="sub">Chef de projet musical — 6 étapes immersives</div>
+    <!-- ===== HEADER ===== -->
+    <header>
+        <div class="logo">🎵 Music<span>Map</span></div>
+        <nav>
+            <a href="#etapes">Étapes</a>
+            <a href="#zoom">Détails</a>
+            <button class="btn-cta" onclick="document.getElementById('etapes').scrollIntoView({behavior:'smooth'})">Commencer</button>
+        </nav>
+    </header>
 
-        <!-- Infos artiste -->
-        <div class="artist-info">
-            <label>🎤 Artiste <input type="text" id="artistName" placeholder="Nom de l'artiste" value=""></label>
-            <label>🎸 Genre <input type="text" id="artistGenre" placeholder="Genre musical" value=""></label>
-            <label>🔗 Lien <input type="text" id="artistLink" placeholder="Lien (Spotify, Insta...)" value=""></label>
-        </div>
+    <!-- ===== HERO ===== -->
+    <section class="hero" id="accueil">
+        <div class="mascotte-hero">🧑‍🚀</div>
+        <h1>Votre chef de projet musical</h1>
+        <p>Organisez, suivez et validez chaque étape de votre sortie musicale, comme si vous aviez un expert à vos côtés.</p>
+        <button class="btn-hero" onclick="document.getElementById('etapes').scrollIntoView({behavior:'smooth'})">🚀 Découvrir</button>
+        <div class="scroll-indicator">↓ Faites défiler</div>
+    </section>
 
-        <div class="jauge"><div class="jauge-fill" id="globalProgress"></div></div>
+    <!-- ===== ÉTAPES ===== -->
+    <section id="etapes">
+        <h2 class="section-title">📋 Les 6 étapes clés</h2>
+        <p class="section-sub">Cliquez sur une étape pour voir ses tâches détaillées.</p>
+        <div class="steps-grid" id="stepsContainer"></div>
 
-        <div id="macroView">
-            <div class="steps-grid" id="stepsContainer"></div>
-        </div>
-
-        <div class="zoom-view" id="zoomView">
+        <!-- Zone zoom (post-it) -->
+        <div class="zoom-section" id="zoomView">
             <div class="zoom-header">
-                <h3 id="zoomTitle">Étape 1</h3>
-                <button onclick="closeZoom()">✕ Retour</button>
+                <h2 id="zoomTitle">Étape 1</h2>
+                <button onclick="closeZoom()">✕ Fermer</button>
             </div>
             <div class="task-list" id="taskContainer"></div>
         </div>
-    </div>
+    </section>
 
-    <!-- Mascotte -->
+    <!-- ===== FOOTER ===== -->
+    <footer>
+        © 2026 MusicMap — Fait avec ❤️ pour les artistes
+    </footer>
+
+    <!-- ===== MASCOOTTE FLOTTANTE ===== -->
     <div class="mascotte-scene">
         <div class="mascotte" id="mascotte">
             <span class="avatar">🧑‍🚀</span>
@@ -499,7 +579,9 @@
     </div>
 
     <script>
-        // ===== DONNÉES =====
+        // ============================================================
+        // DONNÉES
+        // ============================================================
         const projectData = [{
             id: 1,
             title: "📱 Comprendre & s'engager",
@@ -556,21 +638,18 @@
             ]
         }];
 
-        // ===== ÉTAT =====
+        // ============================================================
+        // ÉTAT
+        // ============================================================
         let state = {};
         let currentStepId = null;
         let mascotteTimer = null;
-        let timerInterval = null;
 
         function initState() {
             projectData.forEach(step => {
                 state[step.id] = {};
                 step.tasks.forEach(task => {
-                    state[step.id][task.id] = {
-                        status: 'todo',
-                        comment: '',
-                        startTime: null
-                    };
+                    state[step.id][task.id] = { status: 'todo', comment: '', startTime: null };
                 });
             });
         }
@@ -602,29 +681,9 @@
             } catch (e) {}
         }
 
-        // ===== SAUVEGARDE INFOS ARTISTE =====
-        function saveArtistInfo() {
-            const name = document.getElementById('artistName').value;
-            const genre = document.getElementById('artistGenre').value;
-            const link = document.getElementById('artistLink').value;
-            try {
-                sessionStorage.setItem('artistInfo', JSON.stringify({ name, genre, link }));
-            } catch (e) {}
-        }
-
-        function loadArtistInfo() {
-            try {
-                const saved = sessionStorage.getItem('artistInfo');
-                if (saved) {
-                    const info = JSON.parse(saved);
-                    document.getElementById('artistName').value = info.name || '';
-                    document.getElementById('artistGenre').value = info.genre || '';
-                    document.getElementById('artistLink').value = info.link || '';
-                }
-            } catch (e) {}
-        }
-
-        // ===== MASCOOTTE =====
+        // ============================================================
+        // MASCOOTTE
+        // ============================================================
         function showMascotte(title, msg, duration = 6000) {
             const el = document.getElementById('mascotte');
             document.getElementById('mascotteMsg').innerHTML = `<strong>${title}</strong> ${msg}`;
@@ -640,81 +699,66 @@
             if (mascotteTimer) clearTimeout(mascotteTimer);
         }
 
-        // ===== RENDU MACRO =====
-        function renderMacro() {
+        // ============================================================
+        // RENDU ÉTAPES
+        // ============================================================
+        function renderSteps() {
             const container = document.getElementById('stepsContainer');
             container.innerHTML = '';
-            let totalTasks = 0,
-                doneTasks = 0;
-
-            projectData.forEach(step => {
+            projectData.forEach((step, index) => {
                 const stepTasks = step.tasks;
-                totalTasks += stepTasks.length;
                 let stepDone = 0;
                 stepTasks.forEach(task => {
                     const s = state[step.id]?.[task.id]?.status;
                     if (s === 'done' || s === 'final') stepDone++;
                 });
-                doneTasks += stepDone;
                 const allDone = stepDone === stepTasks.length;
-                const isActive = currentStepId === step.id;
 
                 const card = document.createElement('div');
-                card.className = 'step-card' + (allDone ? ' done' : '') + (isActive ? ' active' : '');
+                card.className = 'step-card';
+                card.style.setProperty('--i', index + 1);
                 card.innerHTML = `
-                    <div class="step-left">
-                        <div class="step-num">${step.id}</div>
-                        <div class="step-info">
-                            <h4>${step.title}</h4>
-                            <p>${step.desc}</p>
-                        </div>
-                    </div>
-                    <div class="step-badge ${allDone ? 'done' : ''}">${allDone ? '✅ Terminé' : stepDone+'/'+stepTasks.length}</div>
+                    <div class="num">${step.id}</div>
+                    <h3>${step.title}</h3>
+                    <p>${step.desc}</p>
+                    <div class="badge ${allDone ? 'done' : ''}">${allDone ? '✅ Terminé' : stepDone+'/'+stepTasks.length}</div>
                 `;
                 card.onclick = () => openZoom(step.id);
                 container.appendChild(card);
             });
-
-            const pct = totalTasks > 0 ? Math.round((doneTasks / totalTasks) * 100) : 0;
-            document.getElementById('globalProgress').style.width = pct + '%';
-            if (pct === 100) showMascotte('🎉 Félicitations !', 'Tout le projet est terminé. Bravo !', 10000);
         }
 
-        // ===== ZOOM =====
+        // ============================================================
+        // ZOOM (POST-IT)
+        // ============================================================
         function openZoom(stepId) {
-            if (timerInterval) clearInterval(timerInterval);
             currentStepId = stepId;
             const step = projectData.find(s => s.id === stepId);
             if (!step) return;
             document.getElementById('zoomTitle').textContent = step.title;
-            document.getElementById('macroView').style.display = 'none';
             document.getElementById('zoomView').classList.add('active');
             renderTasks(step);
-            timerInterval = setInterval(() => {
-                if (currentStepId) {
-                    const s = projectData.find(p => p.id === currentStepId);
-                    if (s) renderTasks(s);
-                }
-            }, 8000);
+            // Faire défiler jusqu'à la zone zoom
+            document.getElementById('zoomView').scrollIntoView({ behavior: 'smooth', block: 'start' });
             showMascotte('🔍 Zoom', 'Voici les tâches de cette étape', 3000);
         }
 
         function closeZoom() {
-            if (timerInterval) clearInterval(timerInterval);
-            timerInterval = null;
             currentStepId = null;
-            document.getElementById('macroView').style.display = 'block';
             document.getElementById('zoomView').classList.remove('active');
-            renderMacro();
+            // Remonter vers les étapes
+            document.getElementById('etapes').scrollIntoView({ behavior: 'smooth' });
         }
 
-        // ===== RENDU TÂCHES (POST-IT) =====
+        // ============================================================
+        // RENDU TÂCHES (POST-IT)
+        // ============================================================
         function renderTasks(step) {
             const container = document.getElementById('taskContainer');
             container.innerHTML = '';
             let previousDone = true;
 
-            step.tasks.forEach((task, idx) => {
+            step.tasks.forEach((task) => {
                 const taskState = state[step.id]?.[task.id] || { status: 'todo', comment: '', startTime: null };
                 const isActive = previousDone && (taskState.status === 'todo' || taskState.status === 'doing');
                 const isDone = taskState.status === 'done' || taskState.status === 'final';
@@ -778,7 +822,9 @@
             });
         }
 
-        // ===== ACTIONS =====
+        // ============================================================
+        // ACTIONS
+        // ============================================================
         function doTask(stepId, taskId, status) {
             const step = projectData.find(s => s.id === stepId);
             if (!step) return;
@@ -813,7 +859,7 @@
 
             saveState();
             if (currentStepId === stepId) renderTasks(step);
-            renderMacro();
+            renderSteps();
         }
 
         function updateComment(stepId, taskId, value) {
@@ -835,19 +881,14 @@
             }
         }
 
-        // ===== INIT =====
+        // ============================================================
+        // INIT
+        // ============================================================
         loadState();
-        loadArtistInfo();
-        renderMacro();
-        document.getElementById('macroView').style.display = 'block';
-        console.log('🎵 MusicMap V4.0 immersive chargée');
+        renderSteps();
+        console.log('🎵 MusicMap V6.0 - Site vitrine interactif chargé');
 
-        // Sauvegarde automatique des infos artiste
-        document.getElementById('artistName').addEventListener('change', saveArtistInfo);
-        document.getElementById('artistGenre').addEventListener('change', saveArtistInfo);
-        document.getElementById('artistLink').addEventListener('change', saveArtistInfo);
-
-        // Rappel périodique
+        // Petit rappel périodique
         setInterval(() => {
             const totalTasks = projectData.reduce((acc, s) => acc + s.tasks.length, 0);
             const doneTasks = projectData.reduce((acc, s) => acc + s.tasks.filter(t => {
