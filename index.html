@@ -1,263 +1,190 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>MusicMap – Le chef de projet musical</title>
-    <!-- Google Fonts -->
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet" />
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MusicMap - Assistant Chef de Projet</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet">
     <style>
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
         }
-        html {
-            scroll-behavior: smooth;
-        }
         body {
             font-family: 'Inter', sans-serif;
             background: #0b0a0f;
-            color: #ffffff;
-            overflow-x: hidden;
-            line-height: 1.5;
+            color: #fff;
+            min-height: 100vh;
+            padding: 24px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
         }
-        /* scrollbar */
-        ::-webkit-scrollbar {
-            width: 6px;
-        }
-        ::-webkit-scrollbar-track {
+        .app {
+            max-width: 1100px;
+            width: 100%;
             background: #14121a;
+            border-radius: 48px;
+            padding: 40px 32px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.8);
+            border: 1px solid #2c2638;
+            position: relative;
         }
-        ::-webkit-scrollbar-thumb {
-            background: #7b4cbf;
-            border-radius: 40px;
+        h1 {
+            font-size: 32px;
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            margin-bottom: 6px;
         }
-
-        /* ===== HEADER ===== */
-        header {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            z-index: 1000;
-            padding: 16px 28px;
-            background: rgba(11, 10, 15, 0.75);
-            backdrop-filter: blur(12px);
-            border-bottom: 1px solid rgba(44, 38, 56, 0.4);
+        h1 span {
+            background: #2a1f3a;
+            padding: 4px 18px;
+            border-radius: 100px;
+            font-size: 14px;
+            color: #b389f0;
+        }
+        .sub {
+            color: #a090b8;
+            font-size: 16px;
+            margin-bottom: 28px;
+            border-left: 3px solid #7b4cbf;
+            padding-left: 16px;
+        }
+        /* ===== MASCOOTTE ===== */
+        .mascotte-banner {
+            background: #1a1822;
+            border-radius: 32px;
+            padding: 20px 28px;
+            margin-bottom: 30px;
+            border: 1px solid #2c2638;
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+        .mascotte-banner .avatar {
+            font-size: 52px;
+            animation: bob 1.2s infinite alternate;
+        }
+        @keyframes bob {
+            0% { transform: translateY(0); }
+            100% { transform: translateY(-8px); }
+        }
+        .mascotte-banner .bubble {
+            flex: 1;
+        }
+        .mascotte-banner .bubble strong {
+            display: block;
+            font-size: 18px;
+            color: #b389f0;
+        }
+        .mascotte-banner .bubble p {
+            color: #c0b0d8;
+            font-size: 15px;
+            margin-top: 4px;
+        }
+        /* ===== ÉTAPES ===== */
+        .steps-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+        }
+        .step-card {
+            background: #1e1a28;
+            border-radius: 24px;
+            padding: 20px 24px;
+            border: 1px solid transparent;
+            cursor: pointer;
+            transition: 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+            opacity: 0.7;
             display: flex;
             justify-content: space-between;
             align-items: center;
+            flex-wrap: wrap;
+            gap: 12px;
         }
-        header .logo {
-            font-size: 22px;
-            font-weight: 700;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-        header .logo span {
-            color: #b389f0;
-        }
-        header nav {
-            display: flex;
-            gap: 24px;
-            align-items: center;
-        }
-        header nav a {
-            color: #a090b8;
-            text-decoration: none;
-            font-size: 14px;
-            transition: 0.3s;
-        }
-        header nav a:hover {
-            color: #fff;
-        }
-        header nav .btn-cta {
-            background: #7b4cbf;
-            padding: 8px 20px;
-            border-radius: 40px;
-            color: #fff;
-            font-weight: 600;
-            font-size: 14px;
-            border: none;
-            cursor: pointer;
-            transition: 0.3s;
-        }
-        header nav .btn-cta:hover {
-            background: #9675dc;
-            transform: scale(1.05);
-        }
-
-        /* ===== HERO ===== */
-        .hero {
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            text-align: center;
-            padding: 120px 24px 80px;
-            position: relative;
-            background: radial-gradient(circle at 20% 30%, #1a1430, #0b0a0f 70%);
-        }
-        .hero .mascotte-hero {
-            font-size: 80px;
-            animation: bob 1.5s infinite alternate ease-in-out;
-            margin-bottom: 16px;
-        }
-        @keyframes bob {
-            0% { transform: translateY(0) scale(1); }
-            100% { transform: translateY(-12px) scale(1.04); }
-        }
-        .hero h1 {
-            font-size: clamp(40px, 8vw, 72px);
-            font-weight: 700;
-            background: linear-gradient(135deg, #b389f0, #7b4cbf, #3ccf8e);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            max-width: 800px;
-        }
-        .hero p {
-            font-size: 18px;
-            color: #a090b8;
-            max-width: 560px;
-            margin: 16px 0 32px;
-        }
-        .hero .btn-hero {
-            background: #7b4cbf;
-            border: none;
-            padding: 14px 40px;
-            border-radius: 60px;
-            font-size: 18px;
-            font-weight: 600;
-            color: #fff;
-            cursor: pointer;
-            transition: 0.3s;
-            box-shadow: 0 0 40px rgba(123, 76, 191, 0.3);
-        }
-        .hero .btn-hero:hover {
-            background: #9675dc;
-            transform: scale(1.06);
-            box-shadow: 0 0 60px rgba(123, 76, 191, 0.5);
-        }
-        .hero .scroll-indicator {
-            margin-top: 48px;
-            color: #4a3f5a;
-            font-size: 14px;
-            animation: bounceDown 2s infinite;
-        }
-        @keyframes bounceDown {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(8px); }
-        }
-
-        /* ===== SECTIONS ===== */
-        section {
-            padding: 80px 24px;
-            max-width: 1100px;
-            margin: 0 auto;
-        }
-        .section-title {
-            font-size: 32px;
-            font-weight: 600;
-            margin-bottom: 12px;
-        }
-        .section-sub {
-            color: #a090b8;
-            font-size: 18px;
-            margin-bottom: 40px;
-        }
-
-        /* ===== ÉTAPES (cartes) ===== */
-        .steps-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-            gap: 20px;
-        }
-        .step-card {
-            background: #1a1822;
-            border-radius: 24px;
-            padding: 28px 22px;
-            border: 1px solid #2c2638;
-            transition: 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
-            cursor: pointer;
-            opacity: 0;
-            transform: translateY(40px);
-            animation: fadeUp 0.8s forwards;
-            animation-delay: calc(0.1s * var(--i, 1));
-        }
-        .step-card:hover {
-            transform: scale(1.03) translateY(-4px);
+        .step-card.active {
+            opacity: 1;
             border-color: #7b4cbf;
-            box-shadow: 0 12px 40px rgba(123, 76, 191, 0.2);
+            background: #231d32;
+            box-shadow: 0 0 30px rgba(123,76,191,0.15);
         }
-        .step-card .num {
-            font-size: 28px;
-            font-weight: 700;
-            color: #b389f0;
-            margin-bottom: 8px;
+        .step-card.done {
+            opacity: 0.9;
+            border-color: #3ccf8e;
+            background: #1a2a24;
         }
-        .step-card h3 {
-            font-size: 20px;
-            font-weight: 600;
-            margin-bottom: 4px;
+        .step-left {
+            display: flex;
+            align-items: center;
+            gap: 16px;
         }
-        .step-card p {
-            color: #8977b0;
-            font-size: 14px;
-        }
-        .step-card .badge {
-            display: inline-block;
-            margin-top: 12px;
-            padding: 4px 14px;
+        .step-num {
+            width: 44px;
+            height: 44px;
             border-radius: 40px;
             background: #2a243b;
-            color: #b389f0;
-            font-size: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 18px;
+            color: #8c78a3;
         }
-        .step-card .badge.done {
+        .step-card.done .step-num {
             background: #3ccf8e;
             color: #0b0a0f;
         }
-        @keyframes fadeUp {
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
+        .step-info h4 {
+            font-size: 18px;
+            font-weight: 500;
         }
-
-        /* ===== ZOOM (POST-IT) ===== */
-        .zoom-section {
-            background: #14121a;
-            border-radius: 32px;
-            padding: 40px 32px;
-            margin-top: 40px;
-            border: 1px solid #2c2638;
+        .step-info p {
+            font-size: 14px;
+            color: #8977b0;
+        }
+        .step-badge {
+            font-size: 13px;
+            padding: 4px 16px;
+            border-radius: 40px;
+            background: #2a243b;
+            color: #b389f0;
+        }
+        .step-badge.done {
+            background: #3ccf8e;
+            color: #0b0a0f;
+        }
+        /* ===== ZOOM ===== */
+        .zoom-view {
             display: none;
-            animation: fadeSlide 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+            margin-top: 28px;
+            background: #1a1822;
+            border-radius: 32px;
+            padding: 28px 24px;
+            border: 1px solid #2c2638;
+            animation: fadeSlide 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
         }
-        .zoom-section.active {
+        .zoom-view.active {
             display: block;
         }
         @keyframes fadeSlide {
-            0% { opacity: 0; transform: translateY(30px) scale(0.96); }
+            0% { opacity: 0; transform: translateY(20px) scale(0.96); }
             100% { opacity: 1; transform: translateY(0) scale(1); }
         }
         .zoom-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 24px;
+            margin-bottom: 20px;
             flex-wrap: wrap;
             gap: 12px;
         }
-        .zoom-header h2 {
+        .zoom-header h3 {
             font-size: 24px;
-            font-weight: 600;
         }
         .zoom-header button {
             background: #2a243b;
@@ -273,22 +200,14 @@
             background: #3a2f50;
             transform: scale(1.05);
         }
-
-        .task-list {
-            display: flex;
-            flex-direction: column;
-            gap: 18px;
-        }
-        /* POST-IT */
+        /* ===== POST-IT ===== */
         .task-item {
             background: #f9f3e8;
             color: #1a1a1a;
             border-radius: 16px;
             padding: 20px 24px;
-            box-shadow: 0 8px 0 #c9b99a, 0 12px 30px rgba(0, 0, 0, 0.5);
-            transform: rotate(0deg);
-            transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
-            opacity: 0.7;
+            margin-bottom: 16px;
+            box-shadow: 0 8px 0 #c9b99a, 0 12px 30px rgba(0,0,0,0.4);
             border-left: 8px solid #c9b99a;
             position: relative;
         }
@@ -304,81 +223,39 @@
             box-shadow: 4px -4px 0 #c9b99a;
             transform: rotate(2deg);
         }
-        .task-item.active-task {
-            opacity: 1;
-            border-left-color: #7b4cbf;
-            transform: rotate(-0.5deg) scale(1.02);
-            box-shadow: 0 8px 0 #7b4cbf, 0 12px 30px rgba(123, 76, 191, 0.3);
-        }
-        .task-item.done-task {
-            opacity: 0.9;
-            border-left-color: #3ccf8e;
-            transform: rotate(0.5deg);
-            box-shadow: 0 8px 0 #3ccf8e, 0 12px 30px rgba(60, 207, 142, 0.3);
-        }
-        .task-item.orange-task {
-            border-left-color: #f5a623;
-            box-shadow: 0 8px 0 #f5a623, 0 12px 30px rgba(245, 166, 35, 0.3);
-        }
-        .task-item.red-task {
-            border-left-color: #e74c3c;
-            box-shadow: 0 8px 0 #e74c3c, 0 12px 30px rgba(231, 76, 60, 0.3);
-            animation: pulseRed 1.5s infinite;
-        }
-        @keyframes pulseRed {
-            0% { transform: rotate(-0.5deg) scale(1); }
-            50% { transform: rotate(-0.5deg) scale(1.02); }
-            100% { transform: rotate(-0.5deg) scale(1); }
-        }
-        .task-top {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            flex-wrap: wrap;
-            gap: 8px;
-        }
-        .task-top h4 {
+        .task-item h4 {
             font-size: 16px;
-            font-weight: 600;
-            color: #1a1a1a;
+            margin-bottom: 4px;
         }
-        .task-top .task-status {
-            font-size: 12px;
-            padding: 4px 14px;
-            border-radius: 40px;
-            background: #2a243b;
-            color: #b389f0;
-        }
-        .task-top .task-status.done {
-            background: #3ccf8e;
-            color: #0b0a0f;
-        }
-        .task-instruction {
+        .task-item p {
             font-size: 14px;
             color: #3d3d3d;
-            margin-top: 4px;
+            margin-bottom: 8px;
         }
-        .task-timer {
+        .task-item .conseil {
+            background: #f0ebd8;
+            padding: 12px 16px;
+            border-radius: 12px;
             font-size: 14px;
-            font-weight: 600;
-            color: #7b4cbf;
-            margin-top: 4px;
+            color: #2a243b;
+            margin: 10px 0;
+            border-left: 4px solid #7b4cbf;
         }
-        .task-comment {
+        .task-item .conseil strong {
+            color: #1a1a1a;
+        }
+        .task-item textarea {
+            width: 100%;
+            padding: 10px 14px;
+            border-radius: 12px;
+            border: 1px solid #c9b99a;
+            background: #fff;
+            font-size: 14px;
+            resize: vertical;
+            min-height: 60px;
             margin-top: 8px;
         }
-        .task-comment input {
-            background: #fff;
-            border: 1px solid #c9b99a;
-            border-radius: 40px;
-            padding: 8px 16px;
-            color: #1a1a1a;
-            font-size: 13px;
-            width: 100%;
-            max-width: 300px;
-            transition: 0.3s;
-        }
-        .task-comment input:focus {
+        .task-item textarea:focus {
             outline: none;
             border-color: #7b4cbf;
         }
@@ -396,11 +273,10 @@
             border-radius: 40px;
             cursor: pointer;
             font-size: 13px;
-            transition: all 0.2s;
+            transition: 0.2s;
         }
         .task-actions button:hover {
             transform: scale(1.05);
-            background: #3a2f50;
         }
         .task-actions button.validate {
             background: #7b4cbf;
@@ -416,489 +292,399 @@
             opacity: 0.4;
             cursor: not-allowed;
             pointer-events: none;
-            transform: none;
         }
-        .task-actions button.final:hover {
-            background: #45dc9c;
-        }
-        .task-actions button.revert {
-            background: #e67e22;
-        }
-        .task-actions button.revert:hover {
-            background: #f39c12;
-        }
-
-        /* ===== MASCOOTTE FLOTTANTE ===== */
-        .mascotte-scene {
-            position: fixed;
-            bottom: 30px;
-            right: 30px;
-            z-index: 9999;
-            pointer-events: none;
-        }
-        .mascotte {
-            display: none;
-            align-items: center;
-            gap: 14px;
-            background: #1e1a28;
-            padding: 12px 20px 12px 16px;
-            border-radius: 60px;
-            border: 1px solid #7b4cbf;
-            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.8);
-            animation: walkIn 0.8s cubic-bezier(0.34, 1.56, 0.64, 1);
-            pointer-events: auto;
-        }
-        .mascotte.active {
-            display: flex;
-        }
-        @keyframes walkIn {
-            0% { transform: translateX(80px) scale(0.5); opacity: 0; }
-            100% { transform: translateX(0) scale(1); opacity: 1; }
-        }
-        .mascotte .avatar {
-            font-size: 44px;
-            animation: bob 1.2s infinite alternate;
-        }
-        .mascotte .bubble {
-            font-size: 14px;
-            color: #c0b0d8;
-            max-width: 220px;
-        }
-        .mascotte .bubble strong {
-            color: #fff;
-            display: block;
-        }
-        .mascotte .close-mascotte {
-            background: #2a243b;
-            border: none;
-            color: #fff;
-            padding: 4px 12px;
+        .task-status {
+            display: inline-block;
+            padding: 2px 14px;
             border-radius: 40px;
-            cursor: pointer;
-            font-size: 16px;
-            pointer-events: auto;
+            font-size: 12px;
+            background: #2a243b;
+            color: #b389f0;
+            margin-top: 6px;
         }
-        .mascotte .close-mascotte:hover {
-            background: #3a2f50;
+        .task-status.done {
+            background: #3ccf8e;
+            color: #0b0a0f;
         }
-
         /* ===== FOOTER ===== */
         footer {
             text-align: center;
-            padding: 40px 24px;
+            margin-top: 40px;
             color: #4a3f5a;
-            font-size: 14px;
+            font-size: 13px;
             border-top: 1px solid #1a1822;
+            padding-top: 24px;
         }
-
-        /* ===== RESPONSIVE ===== */
-        @media (max-width: 640px) {
-            header nav a {
-                display: none;
-            }
-            header nav .btn-cta {
-                font-size: 12px;
-                padding: 6px 16px;
-            }
-            .hero .mascotte-hero {
-                font-size: 56px;
-            }
-            .hero h1 {
-                font-size: 32px;
-            }
-            .zoom-section {
-                padding: 24px 16px;
-            }
-            .task-item {
-                padding: 16px;
-            }
-            .mascotte-scene {
-                bottom: 16px;
-                right: 16px;
-            }
-            .mascotte {
-                padding: 8px 14px;
-                flex-wrap: wrap;
-            }
-            .mascotte .bubble {
-                max-width: 140px;
-                font-size: 12px;
-            }
+        @media (max-width: 600px) {
+            .app { padding: 20px 16px; }
+            .mascotte-banner { flex-direction: column; align-items: flex-start; }
+            .step-card { flex-direction: column; align-items: flex-start; }
         }
     </style>
 </head>
 <body>
+<div class="app">
+    <h1>🎵 MusicMap <span>Assistant</span></h1>
+    <div class="sub">Votre chef de projet musical intelligent</div>
 
-    <!-- ===== HEADER ===== -->
-    <header>
-        <div class="logo">🎵 Music<span>Map</span></div>
-        <nav>
-            <a href="#etapes">Étapes</a>
-            <a href="#zoom">Détails</a>
-            <button class="btn-cta" onclick="document.getElementById('etapes').scrollIntoView({behavior:'smooth'})">Commencer</button>
-        </nav>
-    </header>
-
-    <!-- ===== HERO ===== -->
-    <section class="hero" id="accueil">
-        <div class="mascotte-hero">🧑‍🚀</div>
-        <h1>Votre chef de projet musical</h1>
-        <p>Organisez, suivez et validez chaque étape de votre sortie musicale, comme si vous aviez un expert à vos côtés.</p>
-        <button class="btn-hero" onclick="document.getElementById('etapes').scrollIntoView({behavior:'smooth'})">🚀 Découvrir</button>
-        <div class="scroll-indicator">↓ Faites défiler</div>
-    </section>
-
-    <!-- ===== ÉTAPES ===== -->
-    <section id="etapes">
-        <h2 class="section-title">📋 Les 6 étapes clés</h2>
-        <p class="section-sub">Cliquez sur une étape pour voir ses tâches détaillées.</p>
-        <div class="steps-grid" id="stepsContainer"></div>
-
-        <!-- Zone zoom (post-it) -->
-        <div class="zoom-section" id="zoomView">
-            <div class="zoom-header">
-                <h2 id="zoomTitle">Étape 1</h2>
-                <button onclick="closeZoom()">✕ Fermer</button>
-            </div>
-            <div class="task-list" id="taskContainer"></div>
-        </div>
-    </section>
-
-    <!-- ===== FOOTER ===== -->
-    <footer>
-        © 2026 MusicMap — Fait avec ❤️ pour les artistes
-    </footer>
-
-    <!-- ===== MASCOOTTE FLOTTANTE ===== -->
-    <div class="mascotte-scene">
-        <div class="mascotte" id="mascotte">
-            <span class="avatar">🧑‍🚀</span>
-            <div class="bubble" id="mascotteMsg"><strong>Chef de projet</strong> Alors, on avance ?</div>
-            <button class="close-mascotte" onclick="closeMascotte()">✕</button>
+    <!-- Bannière mascotte -->
+    <div class="mascotte-banner" id="mascotteBanner">
+        <div class="avatar">🧑‍🚀</div>
+        <div class="bubble">
+            <strong id="mascotteTitle">Bonjour !</strong>
+            <p id="mascotteMessage">Je suis votre assistant. Cliquez sur une étape pour commencer.</p>
         </div>
     </div>
 
-    <script>
-        // ============================================================
-        // DONNÉES
-        // ============================================================
-        const projectData = [{
-            id: 1,
-            title: "📱 Comprendre & s'engager",
-            desc: "Fiche artiste, accord, accès",
-            tasks: [
-                { id: "1.1", instruction: "Remplis ta fiche artiste (nom, genre, liens)", duration: 2 },
-                { id: "1.2", instruction: "Signe l'accord de planning (valide les délais)", duration: 1 },
-                { id: "1.3", instruction: "Donne les accès à tes comptes (Spotify, Insta...)", duration: 1 }
-            ]
-        }, {
-            id: 2,
-            title: "🎬 Préparer la musique",
-            desc: "Fichier final, infos, validation",
-            tasks: [
-                { id: "2.1", instruction: "Envoie le fichier audio final (WAV/MP3)", duration: 3 },
-                { id: "2.2", instruction: "Remplis les infos du titre (titre, featuring, durée)", duration: 1 },
-                { id: "2.3", instruction: "Valide le son définitif (mix/master)", duration: 2 }
-            ]
-        }, {
-            id: 3,
-            title: "🎨 Créer l'habillage",
-            desc: "Pochette, visuels, teaser",
-            tasks: [
-                { id: "3.1", instruction: "Valide la pochette (carrée, format plateformes)", duration: 3 },
-                { id: "3.2", instruction: "Fournis une photo ou vidéo teaser", duration: 2 },
-                { id: "3.3", instruction: "Valide l'image finale", duration: 2 }
-            ]
-        }, {
-            id: 4,
-            title: "📢 Lancer la promo",
-            desc: "Comptes, vidéos, dossier presse",
-            tasks: [
-                { id: "4.1", instruction: "Vérifie tes comptes TikTok/Insta/Spotify", duration: 2 },
-                { id: "4.2", instruction: "Prépare 3 vidéos pour annoncer", duration: 4 },
-                { id: "4.3", instruction: "Envoie le dossier à des contacts (presse, blog)", duration: 3 }
-            ]
-        }, {
-            id: 5,
-            title: "🚀 Sortir le titre",
-            desc: "Vérification, publications, emailing",
-            tasks: [
-                { id: "5.1", instruction: "Vérifie que la musique est bien en ligne partout", duration: 1 },
-                { id: "5.2", instruction: "Publie les annonces sur les réseaux", duration: 1 },
-                { id: "5.3", instruction: "Envoie un email à tes fans", duration: 1 }
-            ]
-        }, {
-            id: 6,
-            title: "📊 Faire le bilan",
-            desc: "Chiffres, retours, clôture",
-            tasks: [
-                { id: "6.1", instruction: "Regarde les chiffres (streams, vues)", duration: 2 },
-                { id: "6.2", instruction: "Recueille les retours", duration: 2 },
-                { id: "6.3", instruction: "Valide la clôture du projet", duration: 1 }
-            ]
-        }];
+    <!-- Liste des étapes -->
+    <div class="steps-grid" id="stepsContainer"></div>
 
-        // ============================================================
-        // ÉTAT
-        // ============================================================
-        let state = {};
-        let currentStepId = null;
-        let mascotteTimer = null;
+    <!-- Zone zoom -->
+    <div class="zoom-view" id="zoomView">
+        <div class="zoom-header">
+            <h3 id="zoomTitle">Étape 1</h3>
+            <button onclick="closeZoom()">✕ Retour</button>
+        </div>
+        <div id="taskContainer"></div>
+    </div>
 
-        function initState() {
-            projectData.forEach(step => {
-                state[step.id] = {};
-                step.tasks.forEach(task => {
-                    state[step.id][task.id] = { status: 'todo', comment: '', startTime: null };
-                });
+    <footer>© 2026 MusicMap — Assistant intégré</footer>
+</div>
+
+<script>
+    // ============================================================
+    // DONNÉES AVEC CONSEILS ET QUESTIONS
+    // ============================================================
+    const projectData = [{
+        id: 1,
+        title: "🎤 Identité artistique",
+        desc: "Nom, genre, image",
+        tasks: [{
+            id: "1.1",
+            instruction: "Quel est ton nom de scène ?",
+            conseil: "Choisis un nom court, mémorable, et vérifie qu'il n'est pas déjà utilisé sur Spotify/Instagram.",
+            placeholder: "Ex: Lune Électrique"
+        }, {
+            id: "1.2",
+            instruction: "Quel est ton genre musical principal ?",
+            conseil: "Sois précis : 'Pop alternative' ou 'Hip-hop lo-fi' attirent plus facilement les playlists.",
+            placeholder: "Ex: Pop alternative"
+        }, {
+            id: "1.3",
+            instruction: "As-tu déjà une photo ou un logo ?",
+            conseil: "Si non, utilise Canva (gratuit) pour créer un visuel simple avec ton nom.",
+            placeholder: "Oui / Non, je vais en créer"
+        }]
+    }, {
+        id: 2,
+        title: "🎬 Musique & production",
+        desc: "Fichiers, mix, mastering",
+        tasks: [{
+            id: "2.1",
+            instruction: "As-tu un fichier audio final (WAV/MP3) ?",
+            conseil: "Le WAV est préférable pour les plateformes. Si tu n'as que du MP3, c'est acceptable.",
+            placeholder: "Oui / Non"
+        }, {
+            id: "2.2",
+            instruction: "As-tu les crédits complets ? (paroliers, producteurs, featuring)",
+            conseil: "Ces infos sont obligatoires pour les plateformes. Fais une liste simple.",
+            placeholder: "Liste des crédits..."
+        }, {
+            id: "2.3",
+            instruction: "As-tu validé le mix/master définitif ?",
+            conseil: "Si tu hésites, fais écouter à 2-3 personnes de confiance avant de valider.",
+            placeholder: "Oui / Non, je vais le faire"
+        }]
+    }, {
+        id: 3,
+        title: "🎨 Visuels & habillage",
+        desc: "Pochette, teaser, photos",
+        tasks: [{
+            id: "3.1",
+            instruction: "As-tu une pochette carrée (3000x3000 px) ?",
+            conseil: "Utilise Canva ou Adobe Express pour en créer une facilement.",
+            placeholder: "Oui / Non"
+        }, {
+            id: "3.2",
+            instruction: "As-tu un visuel animé (Spotify Canvas) ?",
+            conseil: "Une vidéo de 3-8 secondes en boucle augmente l'engagement de 20%.",
+            placeholder: "Oui / Non"
+        }, {
+            id: "3.3",
+            instruction: "As-tu des photos presse ?",
+            conseil: "3 photos pro ou semi-pro suffisent. Une en noir & blanc, une en couleur.",
+            placeholder: "Oui / Non"
+        }]
+    }, {
+        id: 4,
+        title: "📢 Promotion & réseaux",
+        desc: "TikTok, Instagram, presse",
+        tasks: [{
+            id: "4.1",
+            instruction: "As-tu un compte TikTok actif ?",
+            conseil: "Publie 3 vidéos teaser avant la sortie. Montre les coulisses.",
+            placeholder: "Oui / Non"
+        }, {
+            id: "4.2",
+            instruction: "As-tu préparé un dossier de presse ?",
+            conseil: "Une page avec : bio, photo, liens, 2-3 anecdotes sur le titre.",
+            placeholder: "Oui / Non"
+        }, {
+            id: "4.3",
+            instruction: "As-tu une liste de contacts (presse, blogueurs) ?",
+            conseil: "Cherche 10 blogueurs spécialisés dans ton genre. Envoie-leur un pitch personnalisé.",
+            placeholder: "Liste de contacts..."
+        }]
+    }, {
+        id: 5,
+        title: "🚀 Lancement",
+        desc: "Publication, emailing",
+        tasks: [{
+            id: "5.1",
+            instruction: "As-tu vérifié que la musique est bien en ligne partout ?",
+            conseil: "Spotify, Apple Music, Deezer, YouTube. Vérifie chaque plateforme.",
+            placeholder: "Oui / Non"
+        }, {
+            id: "5.2",
+            instruction: "As-tu programmé des posts sur les réseaux ?",
+            conseil: "Programme 5 posts sur 5 jours : annonce, teaser, sortie, remerciements, making-of.",
+            placeholder: "Oui / Non"
+        }, {
+            id: "5.3",
+            instruction: "As-tu envoyé un email à ta newsletter ?",
+            conseil: "Un email simple avec un lien d'écoute et un visuel accrocheur.",
+            placeholder: "Oui / Non"
+        }]
+    }, {
+        id: 6,
+        title: "📊 Bilan & suite",
+        desc: "Chiffres, retours, prochain projet",
+        tasks: [{
+            id: "6.1",
+            instruction: "As-tu regardé tes chiffres (streams, vues) ?",
+            conseil: "Analyse les 7 premiers jours. Note ce qui a le mieux marché.",
+            placeholder: "Oui / Non"
+        }, {
+            id: "6.2",
+            instruction: "As-tu recueilli des retours ?",
+            conseil: "Demande à 5 personnes ce qu'elles ont aimé / moins aimé.",
+            placeholder: "Retours..."
+        }, {
+            id: "6.3",
+            instruction: "As-tu archivé tous les livrables ?",
+            conseil: "Conserve tout (fichiers, visuels, contacts) pour le prochain projet.",
+            placeholder: "Oui / Non"
+        }]
+    }];
+
+    // ============================================================
+    // ÉTAT
+    // ============================================================
+    let state = {};
+    let currentStepId = null;
+
+    function initState() {
+        projectData.forEach(step => {
+            state[step.id] = {};
+            step.tasks.forEach(task => {
+                state[step.id][task.id] = { status: 'todo', answer: '' };
             });
-        }
+        });
+    }
 
-        function loadState() {
-            try {
-                const saved = sessionStorage.getItem('musicMapState');
-                if (saved) {
-                    state = JSON.parse(saved);
-                    projectData.forEach(step => {
-                        if (!state[step.id]) state[step.id] = {};
-                        step.tasks.forEach(task => {
-                            if (!state[step.id][task.id]) {
-                                state[step.id][task.id] = { status: 'todo', comment: '', startTime: null };
-                            }
-                        });
+    function loadState() {
+        try {
+            const saved = sessionStorage.getItem('musicMapState');
+            if (saved) {
+                state = JSON.parse(saved);
+                projectData.forEach(step => {
+                    if (!state[step.id]) state[step.id] = {};
+                    step.tasks.forEach(task => {
+                        if (!state[step.id][task.id]) {
+                            state[step.id][task.id] = { status: 'todo', answer: '' };
+                        }
                     });
-                } else {
-                    initState();
-                }
-            } catch (e) {
+                });
+            } else {
                 initState();
             }
+        } catch(e) {
+            initState();
         }
+    }
 
-        function saveState() {
-            try {
-                sessionStorage.setItem('musicMapState', JSON.stringify(state));
-            } catch (e) {}
-        }
+    function saveState() {
+        try {
+            sessionStorage.setItem('musicMapState', JSON.stringify(state));
+        } catch(e) {}
+    }
 
-        // ============================================================
-        // MASCOOTTE
-        // ============================================================
-        function showMascotte(title, msg, duration = 6000) {
-            const el = document.getElementById('mascotte');
-            document.getElementById('mascotteMsg').innerHTML = `<strong>${title}</strong> ${msg}`;
-            el.classList.add('active');
-            if (mascotteTimer) clearTimeout(mascotteTimer);
-            mascotteTimer = setTimeout(() => {
-                el.classList.remove('active');
-            }, duration);
-        }
-
-        function closeMascotte() {
-            document.getElementById('mascotte').classList.remove('active');
-            if (mascotteTimer) clearTimeout(mascotteTimer);
-        }
-
-        // ============================================================
-        // RENDU ÉTAPES
-        // ============================================================
-        function renderSteps() {
-            const container = document.getElementById('stepsContainer');
-            container.innerHTML = '';
-            projectData.forEach((step, index) => {
-                const stepTasks = step.tasks;
-                let stepDone = 0;
-                stepTasks.forEach(task => {
-                    const s = state[step.id]?.[task.id]?.status;
-                    if (s === 'done' || s === 'final') stepDone++;
-                });
-                const allDone = stepDone === stepTasks.length;
-
-                const card = document.createElement('div');
-                card.className = 'step-card';
-                card.style.setProperty('--i', index + 1);
-                card.innerHTML = `
-                    <div class="num">${step.id}</div>
-                    <h3>${step.title}</h3>
-                    <p>${step.desc}</p>
-                    <div class="badge ${allDone ? 'done' : ''}">${allDone ? '✅ Terminé' : stepDone+'/'+stepTasks.length}</div>
-                `;
-                card.onclick = () => openZoom(step.id);
-                container.appendChild(card);
+    // ============================================================
+    // RENDU ÉTAPES
+    // ============================================================
+    function renderSteps() {
+        const container = document.getElementById('stepsContainer');
+        container.innerHTML = '';
+        projectData.forEach(step => {
+            const stepTasks = step.tasks;
+            let done = 0;
+            stepTasks.forEach(t => {
+                const s = state[step.id]?.[t.id]?.status;
+                if (s === 'done' || s === 'final') done++;
             });
-        }
+            const allDone = done === stepTasks.length;
+            const isActive = currentStepId === step.id;
 
-        // ============================================================
-        // ZOOM (POST-IT)
-        // ============================================================
-        function openZoom(stepId) {
-            currentStepId = stepId;
-            const step = projectData.find(s => s.id === stepId);
-            if (!step) return;
-            document.getElementById('zoomTitle').textContent = step.title;
-            document.getElementById('zoomView').classList.add('active');
-            renderTasks(step);
-            // Faire défiler jusqu'à la zone zoom
-            document.getElementById('zoomView').scrollIntoView({ behavior: 'smooth', block: 'start' });
-            showMascotte('🔍 Zoom', 'Voici les tâches de cette étape', 3000);
-        }
-
-        function closeZoom() {
-            currentStepId = null;
-            document.getElementById('zoomView').classList.remove('active');
-            // Remonter vers les étapes
-            document.getElementById('etapes').scrollIntoView({ behavior: 'smooth' });
-        }
-
-        // ============================================================
-        // RENDU TÂCHES (POST-IT)
-        // ============================================================
-        function renderTasks(step) {
-            const container = document.getElementById('taskContainer');
-            container.innerHTML = '';
-            let previousDone = true;
-
-            step.tasks.forEach((task) => {
-                const taskState = state[step.id]?.[task.id] || { status: 'todo', comment: '', startTime: null };
-                const isActive = previousDone && (taskState.status === 'todo' || taskState.status === 'doing');
-                const isDone = taskState.status === 'done' || taskState.status === 'final';
-                const isFinal = taskState.status === 'final';
-
-                let elapsedDays = 0;
-                let timeDisplay = '';
-                if (taskState.startTime) {
-                    const elapsedMs = Date.now() - taskState.startTime;
-                    elapsedDays = elapsedMs / (1000 * 60 * 60 * 24);
-                    const remaining = Math.max(0, task.duration * 24 * 60 * 60 * 1000 - elapsedMs);
-                    const days = Math.floor(remaining / (1000 * 60 * 60 * 24));
-                    const hours = Math.floor((remaining % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-                    const minutes = Math.floor((remaining % (1000 * 60 * 60)) / (1000 * 60));
-                    timeDisplay = `⏱️ Temps restant : ${days}j ${hours}h ${minutes}m`;
-                } else if (isDone && !isFinal) {
-                    timeDisplay = '✅ Tâche terminée (modifiable)';
-                } else if (isFinal) {
-                    timeDisplay = '🔒 Tâche définitivement validée';
-                } else {
-                    timeDisplay = `⏱️ Durée estimée : ${task.duration} jour${task.duration>1?'s':''}`;
-                }
-
-                const isLate = elapsedDays > task.duration && !isDone && !isFinal;
-                const isAlmostLate = elapsedDays >= task.duration * 0.8 && !isLate && !isDone && !isFinal;
-
-                const div = document.createElement('div');
-                div.className = 'task-item';
-                if (isDone) div.classList.add('done-task');
-                else if (isActive) div.classList.add('active-task');
-                if (isLate && !isDone) div.classList.add('red-task');
-                else if (isAlmostLate && !isDone) div.classList.add('orange-task');
-
-                const statusLabel = isFinal ? '✅ Définitif' : isDone ? '✔️ Terminé' : isActive ? '⏳ En cours' : '⏹️ Bloqué';
-
-                div.innerHTML = `
-                    <div class="task-top">
-                        <h4>📌 Tâche ${task.id}</h4>
-                        <span class="task-status ${isDone ? 'done' : ''}">${statusLabel}</span>
+            const card = document.createElement('div');
+            card.className = 'step-card' + (allDone ? ' done' : '') + (isActive ? ' active' : '');
+            card.innerHTML = `
+                <div class="step-left">
+                    <div class="step-num">${step.id}</div>
+                    <div class="step-info">
+                        <h4>${step.title}</h4>
+                        <p>${step.desc}</p>
                     </div>
-                    <div class="task-instruction">${task.instruction}</div>
-                    <div class="task-timer">${timeDisplay}</div>
-                    <div class="task-comment">
-                        <input type="text" placeholder="Écrire un commentaire..." value="${taskState.comment || ''}" 
-                               onchange="updateComment(${step.id}, '${task.id}', this.value)">
-                    </div>
-                    <div class="task-actions">
-                        ${!isFinal ? `
-                            <button ${isActive ? '' : 'disabled'} class="validate" onclick="doTask(${step.id}, '${task.id}', 'done')">✔️ Terminer</button>
-                            <button ${isActive ? '' : 'disabled'} class="final" onclick="doTask(${step.id}, '${task.id}', 'final')">🔒 Définitif</button>
-                        ` : `
-                            <span style="color:#3ccf8e;">✅ Tâche verrouillée</span>
-                            <button class="revert" onclick="requestRevert(${step.id}, '${task.id}')">↩️ Demander retour</button>
-                        `}
-                    </div>
-                    ${isLate ? `<div style="color:#e74c3c;font-size:13px;margin-top:6px;">⚠️ Retard ! Dépassement de ${(elapsedDays - task.duration).toFixed(1)} jour(s).</div>` : ''}
-                    ${isAlmostLate && !isLate ? `<div style="color:#f5a623;font-size:13px;margin-top:6px;">⏳ Attention, bientôt en retard.</div>` : ''}
-                `;
-                container.appendChild(div);
-                if (!isDone) previousDone = false;
-            });
-        }
+                </div>
+                <div class="step-badge ${allDone ? 'done' : ''}">${allDone ? '✅ Terminé' : done+'/'+stepTasks.length}</div>
+            `;
+            card.onclick = () => openZoom(step.id);
+            container.appendChild(card);
+        });
+    }
 
-        // ============================================================
-        // ACTIONS
-        // ============================================================
-        function doTask(stepId, taskId, status) {
-            const step = projectData.find(s => s.id === stepId);
-            if (!step) return;
-            const task = step.tasks.find(t => t.id === taskId);
-            if (!task) return;
-            const taskState = state[stepId]?.[taskId];
-            if (!taskState) return;
+    // ============================================================
+    // ZOOM
+    // ============================================================
+    function openZoom(stepId) {
+        currentStepId = stepId;
+        const step = projectData.find(s => s.id === stepId);
+        if (!step) return;
+        document.getElementById('zoomTitle').textContent = step.title;
+        document.getElementById('zoomView').classList.add('active');
+        renderTasks(step);
+        updateMascotte(step);
+        document.getElementById('zoomView').scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
 
-            const idx = step.tasks.indexOf(task);
-            if (idx > 0) {
-                const prevTask = step.tasks[idx - 1];
-                const prevState = state[stepId]?.[prevTask.id];
-                if (prevState && prevState.status !== 'final' && prevState.status !== 'done') {
-                    showMascotte('⛔ Bloqué', 'Termine d\'abord la tâche précédente.');
-                    return;
-                }
-            }
+    function closeZoom() {
+        currentStepId = null;
+        document.getElementById('zoomView').classList.remove('active');
+        document.getElementById('mascotteTitle').textContent = 'Bonjour !';
+        document.getElementById('mascotteMessage').textContent = 'Cliquez sur une étape pour commencer.';
+        document.getElementById('etapes').scrollIntoView({ behavior: 'smooth' });
+    }
 
-            if (taskState.status === 'todo' && status !== 'final') {
-                taskState.startTime = Date.now();
-            }
-            taskState.status = status;
+    // ============================================================
+    // RENDU TÂCHES (POST-IT)
+    // ============================================================
+    function renderTasks(step) {
+        const container = document.getElementById('taskContainer');
+        container.innerHTML = '';
+        let previousDone = true;
 
-            if (status === 'done') showMascotte('✅ Bien joué !', 'Tâche terminée. Passe à la suivante.', 4000);
-            else if (status === 'final') showMascotte('🔒 Verrouillé', 'Tâche définitivement validée.', 4000);
+        step.tasks.forEach((task, idx) => {
+            const taskState = state[step.id]?.[task.id] || { status: 'todo', answer: '' };
+            const isActive = previousDone && (taskState.status === 'todo' || taskState.status === 'doing');
+            const isDone = taskState.status === 'done' || taskState.status === 'final';
+            const isFinal = taskState.status === 'final';
 
-            const allFinal = step.tasks.every(t => {
-                const s = state[stepId]?.[t.id];
-                return s && (s.status === 'final' || s.status === 'done');
-            });
-            if (allFinal) showMascotte('🎉 Étape complète', 'Toutes les tâches sont validées !', 6000);
+            const div = document.createElement('div');
+            div.className = 'task-item';
 
-            saveState();
-            if (currentStepId === stepId) renderTasks(step);
-            renderSteps();
-        }
+            const statusLabel = isFinal ? '✅ Définitif' : isDone ? '✔️ Terminé' : isActive ? '⏳ En cours' : '⏹️ Bloqué';
 
-        function updateComment(stepId, taskId, value) {
-            const taskState = state[stepId]?.[taskId];
-            if (taskState) {
-                taskState.comment = value;
+            div.innerHTML = `
+                <h4>${task.instruction}</h4>
+                ${task.conseil ? `<div class="conseil"><strong>💡 Conseil :</strong> ${task.conseil}</div>` : ''}
+                <textarea placeholder="${task.placeholder || 'Écris ta réponse...'}">${taskState.answer || ''}</textarea>
+                <div>
+                    <span class="task-status ${isDone ? 'done' : ''}">${statusLabel}</span>
+                </div>
+                <div class="task-actions">
+                    ${!isFinal ? `
+                        <button ${isActive ? '' : 'disabled'} class="validate" onclick="doTask(${step.id}, ${idx}, 'done')">✔️ Terminer</button>
+                        <button ${isActive ? '' : 'disabled'} class="final" onclick="doTask(${step.id}, ${idx}, 'final')">🔒 Définitif</button>
+                    ` : `
+                        <span style="color:#3ccf8e;">✅ Tâche verrouillée</span>
+                    `}
+                </div>
+            `;
+            container.appendChild(div);
+
+            // Sauvegarde automatique de la réponse
+            const textarea = div.querySelector('textarea');
+            textarea.addEventListener('input', function() {
+                taskState.answer = this.value;
                 saveState();
+            });
+
+            if (!isDone) previousDone = false;
+        });
+    }
+
+    // ============================================================
+    // ACTIONS
+    // ============================================================
+    function doTask(stepId, taskIdx, status) {
+        const step = projectData.find(s => s.id === stepId);
+        if (!step) return;
+        const task = step.tasks[taskIdx];
+        if (!task) return;
+        const taskState = state[stepId]?.[task.id];
+        if (!taskState) return;
+
+        if (taskIdx > 0) {
+            const prevTask = step.tasks[taskIdx - 1];
+            const prevState = state[stepId]?.[prevTask.id];
+            if (prevState && prevState.status !== 'final' && prevState.status !== 'done') {
+                alert('Termine d\'abord la tâche précédente.');
+                return;
             }
         }
 
-        function requestRevert(stepId, taskId) {
-            if (confirm('Demander à l\'administrateur de déverrouiller cette tâche ?')) {
-                const email = 'admin@musicmap.com';
-                const subject = encodeURIComponent('Demande retour - Tâche ' + taskId);
-                const body = encodeURIComponent('Bonjour,\n\nJe souhaite revenir sur la tâche ' + taskId +
-                    '.\n\nMerci de la déverrouiller.\n\nClient MusicMap.');
-                window.location.href = 'mailto:' + email + '?subject=' + subject + '&body=' + body;
-                showMascotte('📩 Demande envoyée', 'Email ouvert pour l\'admin.', 5000);
-            }
+        // Vérifier que la réponse n'est pas vide
+        if (taskState.answer.trim() === '') {
+            alert('Merci de répondre à la question avant de valider.');
+            return;
         }
 
-        // ============================================================
-        // INIT
-        // ============================================================
-        loadState();
+        taskState.status = status;
+        saveState();
+        if (currentStepId === stepId) renderTasks(step);
         renderSteps();
-        console.log('🎵 MusicMap V6.0 - Site vitrine interactif chargé');
+        updateMascotte(step);
+    }
 
-        // Petit rappel périodique
-        setInterval(() => {
-            const totalTasks = projectData.reduce((acc, s) => acc + s.tasks.length, 0);
-            const doneTasks = projectData.reduce((acc, s) => acc + s.tasks.filter(t => {
-                const st = state[s.id]?.[t.id];
-                return st && (st.status === 'done' || st.status === 'final');
-            }).length, 0);
-            if (doneTasks > 0 && doneTasks < totalTasks) {
-                showMascotte('⏰ Petit rappel', 'N\'oublie pas de valider tes tâches !', 4000);
-            }
-        }, 30000);
-    </script>
+    // ============================================================
+    // MASCOOTTE DYNAMIQUE
+    // ============================================================
+    function updateMascotte(step) {
+        const title = document.getElementById('mascotteTitle');
+        const msg = document.getElementById('mascotteMessage');
+        const done = step.tasks.filter(t => {
+            const s = state[step.id]?.[t.id]?.status;
+            return s === 'done' || s === 'final';
+        }).length;
+        const total = step.tasks.length;
+
+        if (done === total) {
+            title.textContent = '🎉 Étape terminée !';
+            msg.textContent = 'Bravo ! Tu as validé toutes les tâches de cette étape. Passe à la suivante.';
+        } else if (done === 0) {
+            title.textContent = '📌 Nouvelle étape';
+            msg.textContent = `Commençons par la première tâche : ${step.tasks[0].instruction}`;
+        } else {
+            title.textContent = '⏳ Continue comme ça';
+            msg.textContent = `Tu as validé ${done}/${total} tâches. La prochaine : ${step.tasks[done].instruction}`;
+        }
+    }
+
+    // ============================================================
+    // INIT
+    // ============================================================
+    loadState();
+    renderSteps();
+    console.log('🎵 MusicMap Assistant chargé');
+</script>
 </body>
 </html>
